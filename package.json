@@ -1,37 +1,37 @@
 {
-    "name": "@mongez/collection",
-    "version": "1.0.0",
-    "description": "A powerful Array Collection Manager for JavaScript And Nodejs",
-    "main": "src/index.ts",
-    "dependencies": {
-        "@mongez/reinforcements": "^2.x.x",
-        "@mongez/supportive-is": "^1.x.x"
-    },
-    "scripts": {
-        "test": "jest ./src",
-        "test:coverage": "jest ./src --coverage",
-        "test:watch": "jest ./src --watch",
-        "test:file": "jest"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/hassanzohdy/reinforcements"
-    },
-    "devDependencies": {
-        "@types/jest": "^28.1.6",
-        "jest": "^28.1.3",
-        "jest-esm-jsx-transform": "^1.0.0",
-        "ts-jest": "^28.0.7",
-        "typescript": "^4.7.4"
-    },
-    "keywords": [
-        "array",
-        "collect",
-        "arrays",
-        "immutableCollection",
-        "immutable",
-        "collection"
-    ],
-    "author": "hassanzohdy",
-    "license": "MIT"
+  "name": "@mongez/collection",
+  "version": "1.0.0",
+  "description": "A powerful Array Collection Manager for JavaScript And Nodejs",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@mongez/reinforcements": "^2.x.x",
+    "@mongez/supportive-is": "^1.x.x"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest ./src --coverage",
+    "test:watch": "jest ./src --watch",
+    "test:file": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hassanzohdy/reinforcements"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.6",
+    "jest": "^28.1.3",
+    "jest-esm-jsx-transform": "^1.0.0",
+    "ts-jest": "^28.0.7",
+    "typescript": "^4.7.4"
+  },
+  "keywords": [
+    "array",
+    "collect",
+    "arrays",
+    "immutableCollection",
+    "immutable",
+    "collection"
+  ],
+  "author": "hassanzohdy",
+  "license": "MIT"
 }

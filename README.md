@@ -87,7 +87,7 @@ const users = collect([
     { id: 3, name: 'Jane' },
 ]);
 
-users.unique('name'); // [{ id: 1, name: 'John' }, { id: 3, name: 'Jane' }]
+users.uniqueList('name'); // [{ id: 1, name: 'John' }, { id: 3, name: 'Jane' }]
 ```
 
 ## Is Empty
