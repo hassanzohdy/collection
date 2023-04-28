@@ -455,8 +455,16 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Reduce the array to a single value
    */
-  public reduce(...args: Parameters<typeof Array.prototype.reduce>) {
-    return this.items.reduce(...args);
+  public reduce<Acc = any>(
+    callback: (
+      accumulator: Acc,
+      currentValue: ItemType,
+      currentIndex: number,
+      array: ItemType[],
+    ) => Acc,
+    initialValue?: Acc,
+  ) {
+    return this.items.reduce<Acc>(callback, initialValue as Acc);
   }
 
   /**
@@ -640,7 +648,9 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Remove the first item from the array
    */
-  public remove(value: Parameters<typeof Array.prototype.indexOf>[0]) {
+  public remove(
+    value: (item: ItemType, index: number, items: ItemType[]) => boolean,
+  ) {
     return this.delete(this.items.findIndex(value));
   }
 
@@ -704,7 +714,7 @@ export class ImmutableCollection<ItemType = any> {
    * Check if the array has the given callback
    */
   public has(
-    callback: Parameters<typeof Array.prototype.findIndex>[0],
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
   ): boolean {
     return this.items.findIndex(callback) !== -1;
   }
@@ -1065,14 +1075,18 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Determines whether all the members of an array satisfy the specified test.
    */
-  public every(callback: Parameters<typeof Array.prototype.every>[0]) {
+  public every(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return this.items.every(callback);
   }
 
   /**
    * Determines whether the specified callback function returns true for any element of an array.
    */
-  public some(callback: Parameters<typeof Array.prototype.some>[0]) {
+  public some(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return this.items.some(callback);
   }
 
@@ -1112,7 +1126,9 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Skip all items until the given callback returns true
    */
-  public skipUntil(callback: Parameters<typeof Array.prototype.findIndex>[0]) {
+  public skipUntil(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     // get all items after the given callback
     const newItems = this.items.slice(this.findIndex(callback));
 
@@ -1123,7 +1139,7 @@ export class ImmutableCollection<ItemType = any> {
    * Skip last items until the given callback returns true
    */
   public skipLastUntil(
-    callback: Parameters<typeof Array.prototype.findIndex>[0],
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
   ) {
     // get all items before the given callback
     const newItems = this.items.slice(0, this.findIndex(callback));
@@ -1134,22 +1150,24 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Get index of the given value
    */
-  public indexOf(value: Parameters<typeof Array.prototype.indexOf>[0]) {
-    return this.items.indexOf(value);
+  public indexOf(item: ItemType, fromIndex?: number) {
+    return this.items.indexOf(item, fromIndex);
   }
 
   /**
    * Find the index of the first item matching the given callback.
    */
-  public findIndex(callback: Parameters<typeof Array.prototype.findIndex>[0]) {
+  public findIndex(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return this.items.findIndex(callback);
   }
 
   /**
    * Get the last index of the given value.
    */
-  public lastIndexOf(...args: Parameters<typeof Array.prototype.lastIndexOf>) {
-    return this.items.lastIndexOf(...args);
+  public lastIndexOf(item: ItemType, fromIndex?: number) {
+    return this.items.lastIndexOf(item, fromIndex);
   }
 
   /**
@@ -1237,7 +1255,9 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Take items from the collection until the given callback returns true.
    */
-  public takeUntil(callback: Parameters<typeof Array.prototype.findIndex>[0]) {
+  public takeUntil(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return new ImmutableCollection<ItemType>(
       this.items.slice(0, this.findIndex(callback)),
     );
@@ -1263,7 +1283,7 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Execute a callback over each item.
    */
-  public forEach(callback: Parameters<typeof Array.prototype.forEach>[0]) {
+  public forEach(callback: (item: ItemType, index: number) => any) {
     this.items.forEach(callback);
     return this;
   }
@@ -1271,14 +1291,16 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * @alias forEach
    */
-  public each(callback: Parameters<typeof Array.prototype.forEach>[0]) {
+  public each(callback: (item: ItemType, index: number) => any) {
     return this.forEach(callback);
   }
 
   /**
    * Tap into the collection and run a callback.
    */
-  public tap(callback: (collection: ImmutableCollection) => any): this {
+  public tap(
+    callback: (collection: ImmutableCollection<ItemType>) => any,
+  ): this {
     callback(this);
 
     return this;
@@ -1698,7 +1720,7 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Get last matching item
    */
-  public lastWhere(callback: Parameters<typeof Array.prototype.find>[0]);
+  public lastWhere(callback: (item: ItemType, index: number) => boolean);
   public lastWhere(key: any, operator?: ComparisonOperator, value?: any);
   public lastWhere(...args: any[]) {
     return this.where(
@@ -1786,7 +1808,7 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Iterator
    */
-  public [Symbol.iterator](): Iterator<any, any, undefined> {
+  public [Symbol.iterator](): Iterator<ItemType> {
     return this.items[Symbol.iterator]();
   }
 }
