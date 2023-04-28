@@ -20,25 +20,25 @@ import {
   shuffle,
   sum,
   unique,
-  unshiftUnique
+  unshiftUnique,
 } from "@mongez/reinforcements";
 import Is from "@mongez/supportive-is";
 import { ComparisonOperator, Operators } from "./types";
 
 const NotExists = Symbol("NotExists");
 
-export default class ImmutableCollection {
+export class ImmutableCollection<ItemType = any> {
   /**
    * Items list
    */
-  public items: any[] = [];
+  public items: ItemType[] = [];
 
   /**
    * Constructor
    */
-  public constructor(items: any[] | ImmutableCollection = []) {
+  public constructor(items: ItemType[] | ImmutableCollection = []) {
     if (items instanceof ImmutableCollection) {
-      this.items = [...items.toArray()];
+      this.items = [...(items as any).toArray()];
     } else if (Array.isArray(items)) {
       this.items = [...items];
     } else {
@@ -51,15 +51,15 @@ export default class ImmutableCollection {
   /**
    * Create collection from iterator
    */
-  public static fromIterator(iterator: Iterable<any>) {
-    return new ImmutableCollection([...iterator]);
+  public static fromIterator<ItemType = any>(iterator: Iterable<any>) {
+    return new ImmutableCollection<ItemType>([...iterator]);
   }
 
   /**
    * Create an empty collection with the given length
    */
-  public static create(length: number, initialValue?: any) {
-    return new ImmutableCollection(
+  public static create<ItemType = any>(length: number, initialValue?: any) {
+    return new ImmutableCollection<ItemType>(
       Array.from({ length }, (_, index) => {
         if (typeof initialValue === "function") {
           return initialValue(index);
@@ -111,14 +111,14 @@ export default class ImmutableCollection {
    * Get items values
    */
   public values() {
-    return ImmutableCollection.fromIterator(this.items.values());
+    return ImmutableCollection.fromIterator<ItemType>(this.items.values());
   }
 
   /**
    * Get items entries
    */
   public entries() {
-    return ImmutableCollection.fromIterator(this.items.entries());
+    return ImmutableCollection.fromIterator<ItemType>(this.items.entries());
   }
 
   /**
@@ -648,16 +648,16 @@ export default class ImmutableCollection {
   /**
    * Get value using dot notation by the given key that starts with the index
    */
-  public get(key: string) {
-    return get(this.items, key);
+  public get(key: keyof ItemType) {
+    return get(this.items, key as string);
   }
 
   /**
    * Get the first item's value for the given key
    */
-  public value(key: string, defaultValue: any = null) {
+  public value(key: keyof ItemType, defaultValue: any = null) {
     for (let item of this.items) {
-      let itemValue = get(item, key, NotExists);
+      let itemValue = get(item, key as string, NotExists);
       if (itemValue !== NotExists) {
         return itemValue;
       }
@@ -669,14 +669,14 @@ export default class ImmutableCollection {
   /**
    * Get value for the given key at the given index
    */
-  public valueAt(index: number, key: string, defaultValue: any = null) {
-    return get(this.items, `${index}.${key}`, defaultValue);
+  public valueAt(index: number, key: keyof ItemType, defaultValue: any = null) {
+    return get(this.items, `${index}.${key as string}`, defaultValue);
   }
 
   /**
    * Get the last's item value for the given key
    */
-  public lastValue(key: string, defaultValue: any = null) {
+  public lastValue(key: keyof ItemType, defaultValue: any = null) {
     return this.reverse().value(key, defaultValue);
   }
 
@@ -1737,7 +1737,7 @@ export default class ImmutableCollection {
    * Group by the given key or keys
    */
   public groupBy(keys: string | string[], listAs = "items") {
-    return new ImmutableCollection(groupBy(this.items, keys, listAs));
+    return new ImmutableCollection(groupBy(this.items as any, keys, listAs));
   }
 
   /**
@@ -1776,10 +1776,10 @@ export default class ImmutableCollection {
   }
 }
 
-export function collect(
-  items: any[] | ImmutableCollection = [],
-): ImmutableCollection {
-  return new ImmutableCollection(items);
+export function collect<ItemType = any>(
+  items: ItemType[] | ImmutableCollection = [],
+): ImmutableCollection<ItemType> {
+  return new ImmutableCollection<ItemType>(items);
 }
 
 collect.fromIterator = ImmutableCollection.fromIterator;

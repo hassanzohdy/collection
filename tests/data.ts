@@ -26,6 +26,15 @@ export const orders = [
       price: 350,
     },
   },
+  {
+    id: 4,
+    customer: "C",
+    amount: 300,
+    taxes: 50,
+    total: {
+      price: 350,
+    },
+  },
 ];
 
 export const users = [
