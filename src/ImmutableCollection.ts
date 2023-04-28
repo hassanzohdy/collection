@@ -81,21 +81,23 @@ export class ImmutableCollection<ItemType = any> {
    * Get items indexes
    */
   public indexes() {
-    return new ImmutableCollection(Object.keys(this.items).map(Number));
+    return new ImmutableCollection<number>(Object.keys(this.items).map(Number));
   }
 
   /**
    * Get items in the given indexes
    */
-  public onlyIndexes(...indexes: number[]) {
-    return new ImmutableCollection(indexes.map(index => this.items[index]));
+  public getByIndexes(...indexes: number[]) {
+    return new ImmutableCollection<ItemType>(
+      indexes.map(index => this.items[index]),
+    );
   }
 
   /**
    * Get items that are not in the given indexes
    */
   public exceptIndexes(...indexes: number[]) {
-    return new ImmutableCollection(
+    return new ImmutableCollection<ItemType>(
       this.items.filter((_, index) => !indexes.includes(index)),
     );
   }
@@ -177,7 +179,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key) + amount);
+        return set(item as any, key, get(item, key) + amount);
       }
 
       return item + amount;
@@ -205,10 +207,10 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key) - amount);
+        return set(item as any, key, get(item, key) - amount);
       }
 
-      return item - amount;
+      return Number(item) - amount;
     });
   }
 
@@ -233,10 +235,10 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item, key, Number(get(item, key)) * amount);
+        return set(item as any, key, Number(get(item, key)) * amount);
       }
 
-      return item * amount;
+      return Number(item) * amount;
     });
   }
 
@@ -266,10 +268,10 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key) / amount);
+        return set(item as any, key, get(item, key) / amount);
       }
 
-      return item / amount;
+      return Number(item) / amount;
     });
   }
 
@@ -299,10 +301,10 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key) % amount);
+        return set(item as any, key, get(item, key) % amount);
       }
 
-      return item % amount;
+      return Number(item) % amount;
     });
   }
 
@@ -310,14 +312,14 @@ export class ImmutableCollection<ItemType = any> {
    * Get every items in the array
    */
   public even(key?: string) {
-    return new ImmutableCollection(even(this.items, key));
+    return new ImmutableCollection<ItemType>(even(this.items, key));
   }
 
   /**
    * Get odd items in the array
    */
   public odd(key?: string) {
-    return new ImmutableCollection(odd(this.items, key));
+    return new ImmutableCollection<ItemType>(odd(this.items, key));
   }
   /////////////////////////////
   // End Of Number methods
@@ -332,7 +334,7 @@ export class ImmutableCollection<ItemType = any> {
   public appendString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key) + string);
+        return set(item as any, key, get(item, key) + string);
       }
 
       return item + string;
@@ -345,7 +347,7 @@ export class ImmutableCollection<ItemType = any> {
   public prependString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item, key, string + get(item, key));
+        return set(item as any, key, string + get(item, key));
       }
 
       return string + item;
@@ -358,10 +360,10 @@ export class ImmutableCollection<ItemType = any> {
   public concatString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key).concat(string));
+        return set(item as any, key, get(item, key).concat(string));
       }
 
-      return item.concat(string);
+      return String(item).concat(string);
     });
   }
 
@@ -375,10 +377,14 @@ export class ImmutableCollection<ItemType = any> {
   ) {
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key).replace(string, replacement));
+        return set(
+          item as any,
+          key,
+          get(item, key).replace(string, replacement),
+        );
       }
 
-      return item.replace(string, replacement);
+      return String(item).replace(string, replacement);
     });
   }
 
@@ -389,13 +395,13 @@ export class ImmutableCollection<ItemType = any> {
     return this.map(item => {
       if (key) {
         return set(
-          item,
+          item as any,
           key,
           get(item, key).replace(new RegExp(string, "g"), replacement),
         );
       }
 
-      return item.replace(new RegExp(string, "g"), replacement);
+      return String(item).replace(new RegExp(string, "g"), replacement);
     });
   }
 
@@ -405,10 +411,10 @@ export class ImmutableCollection<ItemType = any> {
   public removeString(string: string | RegExp, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item, key, get(item, key).replace(string, ""));
+        return set(item as any, key, get(item, key).replace(string, ""));
       }
 
-      return item.replace(string, "");
+      return String(item).replace(string, "");
     });
   }
 
@@ -419,13 +425,13 @@ export class ImmutableCollection<ItemType = any> {
     return this.map(item => {
       if (key) {
         return set(
-          item,
+          item as any,
           key,
           get(item, key).replace(new RegExp(string, "g"), ""),
         );
       }
 
-      return item.replace(new RegExp(string, "g"), "");
+      return String(item).replace(new RegExp(string, "g"), "");
     });
   }
 
@@ -436,7 +442,7 @@ export class ImmutableCollection<ItemType = any> {
    * Merge the given arrays with current array and return new ImmutableCollection
    */
   public merge(...arrays: any[][]) {
-    return new ImmutableCollection(this.items.concat(arrays.flat()));
+    return new ImmutableCollection<ItemType>(this.items.concat(arrays.flat()));
   }
 
   /**
@@ -478,21 +484,21 @@ export class ImmutableCollection<ItemType = any> {
    * Get items in even indexes
    */
   public evenIndexes() {
-    return new ImmutableCollection(evenIndexes(this.items));
+    return new ImmutableCollection<number>(evenIndexes(this.items));
   }
 
   /**
    * Get items in odd indexes
    */
   public oddIndexes() {
-    return new ImmutableCollection(oddIndexes(this.items));
+    return new ImmutableCollection<number>(oddIndexes(this.items));
   }
 
   /**
    * Get unique items in the array
    */
   public unique(key?: string) {
-    return new ImmutableCollection(unique(this.items, key));
+    return new ImmutableCollection<ItemType>(unique(this.items, key));
   }
 
   /**
@@ -501,7 +507,7 @@ export class ImmutableCollection<ItemType = any> {
   public uniqueList(key: string) {
     const foundValues: any[] = [];
 
-    return new ImmutableCollection(
+    return new ImmutableCollection<ItemType>(
       this.items.filter(item => {
         const value = get(item, key);
 
@@ -529,7 +535,7 @@ export class ImmutableCollection<ItemType = any> {
   public unshift(...items: any[]) {
     const currentItems = [...this.items];
     currentItems.unshift(...items);
-    return new ImmutableCollection(currentItems);
+    return new ImmutableCollection<ItemType>(currentItems);
   }
 
   /**
@@ -545,7 +551,7 @@ export class ImmutableCollection<ItemType = any> {
   public prependUnique(...items: any[]) {
     const currentItems = [...this.items];
     unshiftUnique(currentItems, ...items);
-    return new ImmutableCollection(currentItems);
+    return new ImmutableCollection<ItemType>(currentItems);
   }
 
   /**
@@ -561,7 +567,7 @@ export class ImmutableCollection<ItemType = any> {
   public push(...items: any[]) {
     const currentItems = [...this.items];
     currentItems.push(...items);
-    return new ImmutableCollection(currentItems);
+    return new ImmutableCollection<ItemType>(currentItems);
   }
 
   /**
@@ -577,7 +583,7 @@ export class ImmutableCollection<ItemType = any> {
   public pushUnique(...items: any[]) {
     const currentItems = [...this.items];
     pushUnique(currentItems, ...items);
-    return new ImmutableCollection(currentItems);
+    return new ImmutableCollection<ItemType>(currentItems);
   }
 
   /**
@@ -717,7 +723,7 @@ export class ImmutableCollection<ItemType = any> {
   public set(index: number, value: any) {
     const items = [...this.items];
     items[index] = value;
-    return new ImmutableCollection(items);
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -786,36 +792,38 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Map over the collection and return a new collection
    */
-  public map(callback: Parameters<typeof Array.prototype.map>[0]) {
-    return new ImmutableCollection(this.items.map(callback));
+  public map<NewItemType = ItemType>(
+    callback: (item: ItemType, index: number) => NewItemType,
+  ) {
+    return new ImmutableCollection<NewItemType>(this.items.map(callback));
   }
 
   /**
    * Filter the collection based on the given callback
    */
-  public filter(callback: Parameters<typeof Array.prototype.filter>[0]) {
-    return new ImmutableCollection(this.items.filter(callback));
+  public filter(callback: (item: ItemType, index: number) => boolean) {
+    return new ImmutableCollection<ItemType>(this.items.filter(callback));
   }
 
   /**
    * @alias filter
    */
   public takeWhile(callback: Parameters<typeof Array.prototype.filter>[0]) {
-    return new ImmutableCollection(this.items.filter(callback));
+    return new ImmutableCollection<ItemType>(this.items.filter(callback));
   }
 
   /**
    * @alias filter
    */
-  public removeAll(value: Parameters<typeof Array.prototype.filter>[0]) {
-    return this.filter(value);
+  public removeAll(callback: (item: ItemType, index: number) => boolean) {
+    return this.filter(callback);
   }
 
   /**
    * Sort the collection based on the given callback
    */
   public sort(callback?: Parameters<typeof Array.prototype.sort>[0]) {
-    return new ImmutableCollection(this.items.sort(callback));
+    return new ImmutableCollection<ItemType>(this.items.sort(callback));
   }
 
   /**
@@ -848,7 +856,7 @@ export class ImmutableCollection<ItemType = any> {
         return 0;
       });
 
-      return new ImmutableCollection(items);
+      return new ImmutableCollection<ItemType>(items);
     }
 
     if (typeof sortType === "object") {
@@ -876,7 +884,7 @@ export class ImmutableCollection<ItemType = any> {
         return 0;
       });
 
-      return new ImmutableCollection(items);
+      return new ImmutableCollection<ItemType>(items);
     }
 
     return this;
@@ -886,7 +894,7 @@ export class ImmutableCollection<ItemType = any> {
    * Sort order by the given key in descending order
    */
   public sortByDesc(key: string) {
-    return new ImmutableCollection(
+    return new ImmutableCollection<ItemType>(
       this.items.sort((a: any, b: any) => {
         const aValue: any = get(a, key);
         const bValue: any = get(b, key);
@@ -908,7 +916,7 @@ export class ImmutableCollection<ItemType = any> {
    * Get all items that are not valid against the given callback
    */
   public reject(callback: Parameters<typeof Array.prototype.filter>[0]) {
-    return new ImmutableCollection(
+    return new ImmutableCollection<ItemType>(
       this.items.filter((item, index, array) => {
         return !callback(item, index, array);
       }),
@@ -952,7 +960,7 @@ export class ImmutableCollection<ItemType = any> {
       items.pop();
     }
 
-    return new ImmutableCollection(items);
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -974,7 +982,7 @@ export class ImmutableCollection<ItemType = any> {
       }
     }
 
-    return new ImmutableCollection(newItems);
+    return new ImmutableCollection<ItemType>(newItems);
   }
 
   /**
@@ -1003,7 +1011,7 @@ export class ImmutableCollection<ItemType = any> {
       }
     }
 
-    return new ImmutableCollection(newItems.reverse());
+    return new ImmutableCollection<ItemType>(newItems.reverse());
   }
 
   /**
@@ -1020,17 +1028,17 @@ export class ImmutableCollection<ItemType = any> {
     let chunks = chunk(this.items, size);
 
     if (returnAsCollection) {
-      chunks = chunks.map(chunk => new ImmutableCollection(chunk));
+      chunks = chunks.map(chunk => new ImmutableCollection<ItemType>(chunk));
     }
 
-    return new ImmutableCollection(chunks);
+    return new ImmutableCollection<ItemType[]>(chunks);
   }
 
   /**
    * Clone the collection
    */
   public clone() {
-    return new ImmutableCollection([...this.items]);
+    return new ImmutableCollection<ItemType>([...this.items]);
   }
 
   /**
@@ -1044,7 +1052,7 @@ export class ImmutableCollection<ItemType = any> {
    * Reverse collection items
    */
   public reverse() {
-    return new ImmutableCollection(this.items.reverse());
+    return new ImmutableCollection<ItemType>(this.items.reverse());
   }
 
   /**
@@ -1071,7 +1079,9 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Get the first matched item for the given callback
    */
-  public find(callback: Parameters<typeof Array.prototype.find>[0]) {
+  public find(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return this.items.find(callback);
   }
 
@@ -1079,7 +1089,7 @@ export class ImmutableCollection<ItemType = any> {
    * Skip the given number of items
    */
   public skip(number: number) {
-    return new ImmutableCollection(this.items.slice(number));
+    return new ImmutableCollection<ItemType>(this.items.slice(number));
   }
 
   /**
@@ -1096,7 +1106,7 @@ export class ImmutableCollection<ItemType = any> {
     // get all items before the number
     const newItems = this.items.slice(0, -number);
 
-    return new ImmutableCollection(newItems);
+    return new ImmutableCollection<ItemType>(newItems);
   }
 
   /**
@@ -1106,7 +1116,7 @@ export class ImmutableCollection<ItemType = any> {
     // get all items after the given callback
     const newItems = this.items.slice(this.findIndex(callback));
 
-    return new ImmutableCollection(newItems);
+    return new ImmutableCollection<ItemType>(newItems);
   }
 
   /**
@@ -1118,7 +1128,7 @@ export class ImmutableCollection<ItemType = any> {
     // get all items before the given callback
     const newItems = this.items.slice(0, this.findIndex(callback));
 
-    return new ImmutableCollection(newItems);
+    return new ImmutableCollection<ItemType>(newItems);
   }
 
   /**
@@ -1175,7 +1185,7 @@ export class ImmutableCollection<ItemType = any> {
       items[valueIndex] = newValue;
     }
 
-    return new ImmutableCollection(items);
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -1191,7 +1201,7 @@ export class ImmutableCollection<ItemType = any> {
    * Shuffle the items in the collection.
    */
   public shuffle() {
-    return new ImmutableCollection(shuffle(this.items) as any[]);
+    return new ImmutableCollection<ItemType>(shuffle(this.items) as any[]);
   }
 
   /**
@@ -1207,7 +1217,7 @@ export class ImmutableCollection<ItemType = any> {
    * Take items from the beginning of the collection to the given number.
    */
   public take(number: number) {
-    return new ImmutableCollection(this.items.slice(0, number));
+    return new ImmutableCollection<ItemType>(this.items.slice(0, number));
   }
 
   /**
@@ -1221,14 +1231,14 @@ export class ImmutableCollection<ItemType = any> {
    * Take last items from the collection to the given number.
    */
   public takeLast(number: number) {
-    return new ImmutableCollection(this.items.slice(-number));
+    return new ImmutableCollection<ItemType>(this.items.slice(-number));
   }
 
   /**
    * Take items from the collection until the given callback returns true.
    */
   public takeUntil(callback: Parameters<typeof Array.prototype.findIndex>[0]) {
-    return new ImmutableCollection(
+    return new ImmutableCollection<ItemType>(
       this.items.slice(0, this.findIndex(callback)),
     );
   }
@@ -1237,7 +1247,7 @@ export class ImmutableCollection<ItemType = any> {
    * Take a slice from the collection
    */
   public slice(...args: Parameters<typeof Array.prototype.slice>) {
-    return new ImmutableCollection(this.items.slice(...args));
+    return new ImmutableCollection<ItemType>(this.items.slice(...args));
   }
 
   /**
@@ -1247,7 +1257,7 @@ export class ImmutableCollection<ItemType = any> {
     const items = [...this.items];
     items.splice(...args);
 
-    return new ImmutableCollection(items);
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -1294,7 +1304,7 @@ export class ImmutableCollection<ItemType = any> {
    * If the given key is an array then we'll return an array of objects contains these keys
    */
   public pluck(key: string | string[]) {
-    return new ImmutableCollection(pluck(this.items, key));
+    return new ImmutableCollection<ItemType>(pluck(this.items, key));
   }
 
   /**
@@ -1704,7 +1714,7 @@ export class ImmutableCollection<ItemType = any> {
 
     [items[index1], items[index2]] = [items[index2], items[index1]];
 
-    return new ImmutableCollection(items);
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -1715,7 +1725,7 @@ export class ImmutableCollection<ItemType = any> {
 
     items.splice(position, 0, items.splice(index, 1)[0]);
 
-    return new ImmutableCollection(items);
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -1730,14 +1740,19 @@ export class ImmutableCollection<ItemType = any> {
       reorderedItems[newIndex] = this.items[oldIndex];
     });
 
-    return new ImmutableCollection(reorderedItems);
+    return new ImmutableCollection<ItemType>(reorderedItems);
   }
 
   /**
    * Group by the given key or keys
    */
-  public groupBy(keys: string | string[], listAs = "items") {
-    return new ImmutableCollection(groupBy(this.items as any, keys, listAs));
+  public groupBy(keys: string | string[]) {
+    return new ImmutableCollection<
+      {
+        items: ItemType[];
+        [key: string]: any;
+      }[]
+    >(groupBy(this.items as any, keys as string | string[], "items") as any);
   }
 
   /**
@@ -1756,7 +1771,7 @@ export class ImmutableCollection<ItemType = any> {
       }
     });
 
-    return new ImmutableCollection(items);
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -1765,7 +1780,7 @@ export class ImmutableCollection<ItemType = any> {
   public collectFromKey(key: string);
   public collectFromKey(index: number | string, key?: string);
   public collectFromKey(...args) {
-    return new ImmutableCollection(get(this.items, args.join(".")));
+    return new ImmutableCollection<ItemType>(get(this.items, args.join(".")));
   }
 
   /**
