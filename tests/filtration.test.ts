@@ -1,4 +1,4 @@
-import ImmutableCollection, { collect } from "src/ImmutableCollection";
+import { ImmutableCollection, collect } from "src/ImmutableCollection";
 
 describe("collection/ImmutableCollection/filtration", () => {
   it("should filter the collection using where method", () => {

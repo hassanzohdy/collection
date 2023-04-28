@@ -64,7 +64,7 @@ describe("collection/ImmutableCollection/getSingleValue", () => {
       { name: "Ali", age: 30 },
     ]);
 
-    expect(collection.value("nameS", "default")).toBe("default");
+    expect(collection.value("nameS" as any, "default")).toBe("default");
   });
 
   it("should return the value of the given key of the given index", () => {
@@ -84,7 +84,7 @@ describe("collection/ImmutableCollection/getSingleValue", () => {
       { name: "Ali", age: 30 },
     ]);
 
-    expect(collection.valueAt(1, "nameS", "default")).toBe("default");
+    expect(collection.valueAt(1, "nameS" as any, "default")).toBe("default");
   });
 
   it("should return the last item that has the given key", () => {
@@ -104,6 +104,6 @@ describe("collection/ImmutableCollection/getSingleValue", () => {
       { name: "Ali", age: 30 },
     ]);
 
-    expect(collection.lastValue("nameS", "default")).toBe("default");
+    expect(collection.lastValue("nameS" as any, "default")).toBe("default");
   });
 });

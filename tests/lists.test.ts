@@ -15,7 +15,7 @@ describe("collection/ImmutableCollection/listings", () => {
   });
 
   it("should return return values that are in the given indexes", () => {
-    const collection = collect([1, 2, 3, 4, 5, 6, 7]).onlyIndexes(0, 2, 4);
+    const collection = collect([1, 2, 3, 4, 5, 6, 7]).getByIndexes(0, 2, 4);
 
     expect(collection.all()).toEqual([1, 3, 5]);
   });
@@ -259,26 +259,26 @@ describe("collection/ImmutableCollection/listings", () => {
     ]);
   });
 
-  it("should group by the data by the given key and set the list as key", () => {
+  it("should group by the data by the given key", () => {
     const collection = collect([
       { name: "Ahmed", age: 20 },
       { name: "Mohamed", age: 25 },
       { name: "Ali", age: 30 },
       { name: "Hasan", age: 30 },
-    ]).groupBy("age", "data");
+    ]).groupBy("age");
 
     expect(collection.all()).toEqual([
       {
         age: 20,
-        data: [{ name: "Ahmed", age: 20 }],
+        items: [{ name: "Ahmed", age: 20 }],
       },
       {
         age: 25,
-        data: [{ name: "Mohamed", age: 25 }],
+        items: [{ name: "Mohamed", age: 25 }],
       },
       {
         age: 30,
-        data: [
+        items: [
           { name: "Ali", age: 30 },
           { name: "Hasan", age: 30 },
         ],

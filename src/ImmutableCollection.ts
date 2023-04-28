@@ -648,24 +648,22 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Remove the first item from the array
    */
-  public remove(
-    value: (item: ItemType, index: number, items: ItemType[]) => boolean,
-  ) {
-    return this.delete(this.items.findIndex(value));
+  public remove(value: ItemType) {
+    return this.delete(this.findIndex(item => item === value));
   }
 
   /**
    * Get first item in the array
    */
   public first() {
-    return this.items[0] ?? undefined;
+    return this.items[0];
   }
 
   /**
    * Get value using dot notation by the given key that starts with the index
    */
-  public get(key: keyof ItemType) {
-    return get(this.items, key as string);
+  public get(key: string) {
+    return get(this.items, key);
   }
 
   /**
@@ -925,7 +923,9 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Get all items that are not valid against the given callback
    */
-  public reject(callback: Parameters<typeof Array.prototype.filter>[0]) {
+  public reject(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return new ImmutableCollection<ItemType>(
       this.items.filter((item, index, array) => {
         return !callback(item, index, array);
@@ -936,7 +936,9 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * @alias reject
    */
-  public except(callback: Parameters<typeof Array.prototype.filter>[0]) {
+  public except(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return this.reject(callback);
   }
 
@@ -950,14 +952,18 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * @alias reject
    */
-  public skipWhile(callback: Parameters<typeof Array.prototype.filter>[0]) {
+  public skipWhile(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     return this.reject(callback);
   }
 
   /**
    * Skip last items while matching the given callback
    */
-  public skipLastWhile(callback: Parameters<typeof Array.prototype.filter>[0]) {
+  public skipLastWhile(
+    callback: (item: ItemType, index: number, array: ItemType[]) => boolean,
+  ) {
     // [1, 2, 3, 4, 5] skip last while (item) => item > 3 should return [1, 2, 3]
 
     const items = this.items.slice();
@@ -1167,7 +1173,11 @@ export class ImmutableCollection<ItemType = any> {
    * Get the last index of the given value.
    */
   public lastIndexOf(item: ItemType, fromIndex?: number) {
-    return this.items.lastIndexOf(item, fromIndex);
+    if (fromIndex !== undefined) {
+      return this.items.lastIndexOf(item, fromIndex);
+    }
+
+    return this.items.lastIndexOf(item);
   }
 
   /**
@@ -1520,9 +1530,16 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Get first matching item
    */
-  public firstWhere(key: string, value: any);
-  public firstWhere(operator: ComparisonOperator, value: any);
-  public firstWhere(key: string, operator: ComparisonOperator, value: any);
+  public firstWhere(key: string, value: any): ItemType | undefined;
+  public firstWhere(
+    operator: ComparisonOperator,
+    value: any,
+  ): ItemType | undefined;
+  public firstWhere(
+    key: string,
+    operator: ComparisonOperator,
+    value: any,
+  ): ItemType | undefined;
   public firstWhere(...args: any[]) {
     return this.where(
       ...(args as Parameters<typeof ImmutableCollection.prototype.where>),

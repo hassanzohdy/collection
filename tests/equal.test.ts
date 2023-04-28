@@ -1,4 +1,4 @@
-import ImmutableCollection, { collect } from "src/ImmutableCollection";
+import { ImmutableCollection, collect } from "src/ImmutableCollection";
 
 describe("collection/ImmutableCollection/equal", () => {
   it("should return a Collection instance", () => {

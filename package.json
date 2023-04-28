@@ -1,6 +1,6 @@
 {
     "name": "@mongez/collection",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "A powerful Array Collection Manager for JavaScript And Nodejs",
     "main": "src/index.ts",
     "dependencies": {
