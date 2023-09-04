@@ -1,11 +1,11 @@
 {
     "name": "@mongez/collection",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "A powerful Array Collection Manager for JavaScript And Nodejs",
     "main": "src/index.ts",
     "dependencies": {
-        "@mongez/reinforcements": "^2.x.x",
-        "@mongez/supportive-is": "~1.0.12"
+        "@mongez/reinforcements": "^2.3.8",
+        "@mongez/supportive-is": "^2.0.0"
     },
     "scripts": {
         "test": "jest",

@@ -22,7 +22,7 @@ import {
   unique,
   unshiftUnique,
 } from "@mongez/reinforcements";
-import Is from "@mongez/supportive-is";
+import { isEmpty } from "@mongez/supportive-is";
 import { ComparisonOperator, Operators } from "./types";
 
 const NotExists = Symbol("NotExists");
@@ -1516,11 +1516,11 @@ export class ImmutableCollection<ItemType = any> {
           return !(itemValue instanceof value);
         case "empty":
         case "is empty":
-          return Is.empty(itemValue);
+          return isEmpty(itemValue);
         case "not empty":
         case "is not empty":
         case "!empty":
-          return !Is.empty(itemValue);
+          return !isEmpty(itemValue);
         default:
           return false;
       }
@@ -1668,7 +1668,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.filter((item: any) => {
       let value = key ? get(item, key) : item;
 
-      return Is.empty(value);
+      return isEmpty(value);
     });
   }
 
@@ -1679,7 +1679,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.filter((item: any) => {
       let value = key ? get(item, key) : item;
 
-      return !Is.empty(value);
+      return !isEmpty(value);
     });
   }
 
