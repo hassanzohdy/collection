@@ -1353,10 +1353,17 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Get items based on the given operators
    */
-  public where(key: string, value: any);
-  public where(operator: ComparisonOperator, value: any);
-  public where(key: string, operator: ComparisonOperator, value: any);
-  public where(...args: any[]) {
+  public where(key: string, value: any): ImmutableCollection<ItemType>;
+  public where(
+    operator: ComparisonOperator,
+    value: any,
+  ): ImmutableCollection<ItemType>;
+  public where(
+    key: string,
+    operator: ComparisonOperator,
+    value: any,
+  ): ImmutableCollection<ItemType>;
+  public where(...args: any[]): ImmutableCollection<ItemType> {
     let [key, operator, value] = args;
 
     let isPrimitive = false;
@@ -1786,12 +1793,10 @@ export class ImmutableCollection<ItemType = any> {
    * Group by the given key or keys
    */
   public groupBy(keys: string | string[]) {
-    return new ImmutableCollection<
-      {
-        items: ItemType[];
-        [key: string]: any;
-      }
-    >(groupBy(this.items as any, keys as string | string[], "items") as any);
+    return new ImmutableCollection<{
+      items: ItemType[];
+      [key: string]: any;
+    }>(groupBy(this.items as any, keys as string | string[], "items") as any);
   }
 
   /**
