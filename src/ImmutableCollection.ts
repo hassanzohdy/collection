@@ -758,7 +758,7 @@ export class ImmutableCollection<ItemType = any> {
   /**
    * Return the items list
    */
-  public toArray(map?: Parameters<typeof Array.prototype.map>[0]) {
+  public toArray(map?: Parameters<typeof Array.prototype.map<ItemType>>[0]) {
     return map ? this.items.map(map) : this.items;
   }
 
