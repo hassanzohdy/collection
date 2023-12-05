@@ -68,9 +68,9 @@ We can also get the unique values of specific key.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.unique("name"); // ["John", "Jane"]
@@ -82,12 +82,12 @@ The `uniqueList` method will return all unique elements for the given value, so 
 
 ```ts
 const users = collect([
-    { id: 1, name: 'John' },
-    { id: 2, name: 'John' },
-    { id: 3, name: 'Jane' },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
-users.uniqueList('name'); // [{ id: 1, name: 'John' }, { id: 3, name: 'Jane' }]
+users.uniqueList("name"); // [{ id: 1, name: 'John' }, { id: 3, name: 'Jane' }]
 ```
 
 ## Is Empty
@@ -120,9 +120,9 @@ To filter data that based on the given value, you can use the `where` method by 
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.where("name", "John"); // [{ id: 1, name: "John" }, { id: 2, name: "John" }]
@@ -252,9 +252,9 @@ Let's see example of each one of them
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.where("name", "=", "John"); // [{ id: 1, name: "John" }, { id: 2, name: "John" }]
@@ -264,9 +264,9 @@ users.where("name", "=", "John"); // [{ id: 1, name: "John" }, { id: 2, name: "J
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.where("name", "!=", "John"); // [{ id: 3, name: "Jane" }]
@@ -276,9 +276,9 @@ It is also possible to use the `not` operator
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.where("name", "not", "John"); // [{ id: 3, name: "Jane" }]
@@ -288,9 +288,9 @@ users.where("name", "not", "John"); // [{ id: 3, name: "Jane" }]
 
 ```ts
 const users = collect([
-    { id: 1, age: 20 },
-    { id: 2, age: 30 },
-    { id: 3, age: 40 },
+  { id: 1, age: 20 },
+  { id: 2, age: 30 },
+  { id: 3, age: 40 },
 ]);
 
 users.where("age", ">", 30); // [{ id: 3, age: 40 }]
@@ -300,9 +300,9 @@ It can also be used with dates
 
 ```ts
 const users = collect([
-    { id: 1, created_at: new Date("2020-01-01") },
-    { id: 2, created_at: new Date("2020-02-01") },
-    { id: 3, created_at: new Date("2020-03-01") },
+  { id: 1, created_at: new Date("2020-01-01") },
+  { id: 2, created_at: new Date("2020-02-01") },
+  { id: 3, created_at: new Date("2020-03-01") },
 ]);
 
 users.where("created_at", ">", new Date("2020-01-15")); // [{ id: 2, created_at: new Date("2020-02-01") }, { id: 3, created_at: new Date("2020-03-01") }]
@@ -312,9 +312,9 @@ users.where("created_at", ">", new Date("2020-01-15")); // [{ id: 2, created_at:
 
 ```ts
 const users = collect([
-    { id: 1, age: 20 },
-    { id: 2, age: 30 },
-    { id: 3, age: 40 },
+  { id: 1, age: 20 },
+  { id: 2, age: 30 },
+  { id: 3, age: 40 },
 ]);
 
 users.where("age", "<", 30); // [{ id: 1, age: 20 }]
@@ -324,9 +324,9 @@ users.where("age", "<", 30); // [{ id: 1, age: 20 }]
 
 ```ts
 const users = collect([
-    { id: 1, age: 20 },
-    { id: 2, age: 30 },
-    { id: 3, age: 40 },
+  { id: 1, age: 20 },
+  { id: 2, age: 30 },
+  { id: 3, age: 40 },
 ]);
 
 users.where("age", ">=", 30); // [{ id: 2, age: 30 }, { id: 3, age: 40 }]
@@ -336,9 +336,9 @@ It can also compare dates
 
 ```ts
 const users = collect([
-    { id: 1, created_at: new Date("2020-01-01") },
-    { id: 2, created_at: new Date("2020-02-01") },
-    { id: 3, created_at: new Date("2020-03-01") },
+  { id: 1, created_at: new Date("2020-01-01") },
+  { id: 2, created_at: new Date("2020-02-01") },
+  { id: 3, created_at: new Date("2020-03-01") },
 ]);
 
 users.where("created_at", ">=", new Date("2020-02-01")); // [{ id: 2, created_at: new Date("2020-02-01") }, { id: 3, created_at: new Date("2020-03-01") }]
@@ -348,9 +348,9 @@ users.where("created_at", ">=", new Date("2020-02-01")); // [{ id: 2, created_at
 
 ```ts
 const users = collect([
-    { id: 1, age: 20 },
-    { id: 2, age: 30 },
-    { id: 3, age: 40 },
+  { id: 1, age: 20 },
+  { id: 2, age: 30 },
+  { id: 3, age: 40 },
 ]);
 
 users.where("age", "<=", 30); // [{ id: 1, age: 20 }, { id: 2, age: 30 }]
@@ -360,9 +360,9 @@ It can also compare to date
 
 ```ts
 const users = collect([
-    { id: 1, created_at: new Date("2020-01-01") },
-    { id: 2, created_at: new Date("2020-02-01") },
-    { id: 3, created_at: new Date("2020-03-01") },
+  { id: 1, created_at: new Date("2020-01-01") },
+  { id: 2, created_at: new Date("2020-02-01") },
+  { id: 3, created_at: new Date("2020-03-01") },
 ]);
 
 users.where("created_at", "<=", new Date("2020-02-01")); // [{ id: 1, created_at: new Date("2020-01-01") }, { id: 2, created_at: new Date("2020-02-01") }]
@@ -372,9 +372,9 @@ users.where("created_at", "<=", new Date("2020-02-01")); // [{ id: 1, created_at
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jane" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jane" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "regex", /^J/); // [{ id: 1, name: "John" }, { id: 2, name: "Jane" }, { id: 3, name: "Jill" }]
@@ -384,9 +384,9 @@ You can also pass directly the regular expression as second argument without spe
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jane" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jane" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", /^J/); // [{ id: 1, name: "John" }, { id: 2, name: "Jane" }, { id: 3, name: "Jill" }]
@@ -396,9 +396,9 @@ users.where("name", /^J/); // [{ id: 1, name: "John" }, { id: 2, name: "Jane" },
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "like", "Jo"); // [{ id: 1, name: "John" }, { id: 2, name: "Jone" }]
@@ -408,9 +408,9 @@ users.where("name", "like", "Jo"); // [{ id: 1, name: "John" }, { id: 2, name: "
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "not like", "Jo"); // [{ id: 3, name: "Jill" }]
@@ -420,9 +420,9 @@ users.where("name", "not like", "Jo"); // [{ id: 3, name: "Jill" }]
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "is", "string"); // [{ id: 1, name: "John" }, { id: 2, name: "Jone" }, { id: 3, name: "Jill" }]
@@ -432,9 +432,9 @@ users.where("name", "is", "string"); // [{ id: 1, name: "John" }, { id: 2, name:
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "not is", "string"); // []
@@ -444,9 +444,9 @@ users.where("name", "not is", "string"); // []
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "starts with", "Jo"); // [{ id: 1, name: "John" }, { id: 2, name: "Jone" }]
@@ -456,9 +456,9 @@ users.where("name", "starts with", "Jo"); // [{ id: 1, name: "John" }, { id: 2, 
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "ends with", "ne"); // [{ id: 2, name: "Jone" }]
@@ -468,9 +468,9 @@ users.where("name", "ends with", "ne"); // [{ id: 2, name: "Jone" }]
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "in", ["John", "Jill"]); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -480,9 +480,9 @@ users.where("name", "in", ["John", "Jill"]); // [{ id: 1, name: "John" }, { id: 
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "not in", ["John", "Jill"]); // [{ id: 2, name: "Jone" }]
@@ -492,9 +492,9 @@ users.where("name", "not in", ["John", "Jill"]); // [{ id: 2, name: "Jone" }]
 
 ```ts
 const users = collect([
-    { id: 1, age: 20 },
-    { id: 2, age: 30 },
-    { id: 3, age: 40 },
+  { id: 1, age: 20 },
+  { id: 2, age: 30 },
+  { id: 3, age: 40 },
 ]);
 
 users.where("age", "between", [25, 35]); // [{ id: 2, age: 30 }]
@@ -504,22 +504,28 @@ It can also compare to dates as well.
 
 ```ts
 const users = collect([
-    { id: 1, created_at: new Date("2020-01-01") },
-    { id: 2, created_at: new Date("2020-02-01") },
-    { id: 3, created_at: new Date("2020-03-01") },
+  { id: 1, created_at: new Date("2020-01-01") },
+  { id: 2, created_at: new Date("2020-02-01") },
+  { id: 3, created_at: new Date("2020-03-01") },
 ]);
 
-users.where("created_at", "<>", [new Date("2020-01-15"), new Date("2020-02-15")]); // [{ id: 2, created_at: new Date("2020-02-01") }]
-users.where("created_at", "between", [new Date("2020-01-15"), new Date("2020-02-15")]); // [{ id: 2, created_at: new Date("2020-02-01") }]
+users.where("created_at", "<>", [
+  new Date("2020-01-15"),
+  new Date("2020-02-15"),
+]); // [{ id: 2, created_at: new Date("2020-02-01") }]
+users.where("created_at", "between", [
+  new Date("2020-01-15"),
+  new Date("2020-02-15"),
+]); // [{ id: 2, created_at: new Date("2020-02-01") }]
 ```
 
 #### `not between` and `!<>` and `!between`
 
 ```ts
 const users = collect([
-    { id: 1, age: 20 },
-    { id: 2, age: 30 },
-    { id: 3, age: 40 },
+  { id: 1, age: 20 },
+  { id: 2, age: 30 },
+  { id: 3, age: 40 },
 ]);
 
 users.where("age", "!<>", [25, 35]); // [{ id: 1, age: 20 }, { id: 3, age: 40 }]
@@ -530,21 +536,24 @@ It can also compare to dates as well.
 
 ```ts
 const users = collect([
-    { id: 1, created_at: new Date("2020-01-01") },
-    { id: 2, created_at: new Date("2020-02-01") },
-    { id: 3, created_at: new Date("2020-03-01") },
+  { id: 1, created_at: new Date("2020-01-01") },
+  { id: 2, created_at: new Date("2020-02-01") },
+  { id: 3, created_at: new Date("2020-03-01") },
 ]);
 
-users.where("created_at", "not between", [new Date("2020-01-15"), new Date("2020-02-15")]); // [{ id: 1, created_at: new Date("2020-01-01") }, { id: 3, created_at: new Date("2020-03-01") }]
+users.where("created_at", "not between", [
+  new Date("2020-01-15"),
+  new Date("2020-02-15"),
+]); // [{ id: 1, created_at: new Date("2020-01-01") }, { id: 3, created_at: new Date("2020-03-01") }]
 ```
 
 #### `null`
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: null },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: null },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "null"); // [{ id: 2, name: null }]
@@ -554,9 +563,9 @@ users.where("name", "null"); // [{ id: 2, name: null }]
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: null },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: null },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "not null"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -566,9 +575,9 @@ users.where("name", "not null"); // [{ id: 1, name: "John" }, { id: 3, name: "Ji
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "empty"); // [{ id: 2, name: "" }]
@@ -580,9 +589,9 @@ users.where("name", "empty"); // [{ id: 2, name: "" }]
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "not empty"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -594,9 +603,9 @@ users.where("name", "not empty"); // [{ id: 1, name: "John" }, { id: 3, name: "J
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: undefined },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: undefined },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "undefined"); // [{ id: 2, name: undefined }]
@@ -606,9 +615,9 @@ users.where("name", "undefined"); // [{ id: 2, name: undefined }]
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: undefined },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: undefined },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "not undefined"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -617,16 +626,15 @@ users.where("name", "not undefined"); // [{ id: 1, name: "John" }, { id: 3, name
 ### `is a` and `instance of`
 
 ```ts
-
 class Member {
-    id = 1;
-    name: 'John'
+  id = 1;
+  name: "John";
 }
 
 const users = collect([
-    new Member(),
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  new Member(),
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "is a", Member); // [new Member()]
@@ -636,14 +644,14 @@ users.where("name", "is a", Member); // [new Member()]
 
 ```ts
 class Member {
-    id = 1;
-    name: 'John'
+  id = 1;
+  name: "John";
 }
 
 const users = collect([
-    new Member(),
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  new Member(),
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.where("name", "not is a", Member); // [{ id: 2, name: "Jone" }, { id: 3, name: "Jill" }]
@@ -653,10 +661,10 @@ users.where("name", "not is a", Member); // [{ id: 2, name: "Jone" }, { id: 3, n
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
-    {id: 4, age: 31}
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
+  { id: 4, age: 31 },
 ]);
 
 users.where("name", "exists"); // [{ id: 1, name: "John" }, { id: 2, name: "Jone" }, { id: 3, name: "Jill" }]
@@ -666,10 +674,10 @@ users.where("name", "exists"); // [{ id: 1, name: "John" }, { id: 2, name: "Jone
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
-    {id: 4, age: 31}
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
+  { id: 4, age: 31 },
 ]);
 
 users.where("name", "not exists"); // [{id: 4, age: 31}]
@@ -681,9 +689,9 @@ Alias to `where('column', 'in', values)`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereIn("name", ["John", "Jill"]); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -695,9 +703,9 @@ Alias to `where('column', 'not in', values)`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereNotIn("name", ["John", "Jill"]); // [{ id: 2, name: "Jone" }]
@@ -709,9 +717,9 @@ Alias to `where('column', 'null')`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: null },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: null },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereNull("name"); // [{ id: 2, name: null }]
@@ -723,9 +731,9 @@ Alias to `where('column', 'not null')`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: null },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: null },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereNotNull("name"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -737,9 +745,9 @@ Alias to `where('column', 'empty')`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereEmpty("name"); // [{ id: 2, name: "" }]
@@ -751,9 +759,9 @@ Alias to `where('column', 'not empty')`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereNotEmpty("name"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -763,9 +771,9 @@ users.whereNotEmpty("name"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" 
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.heavy("name"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -777,9 +785,9 @@ Alias to `where('column', 'undefined')`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: undefined },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: undefined },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereUndefined("name"); // [{ id: 2, name: undefined }]
@@ -791,9 +799,9 @@ Alias to `where('column', 'not undefined')`.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: undefined },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: undefined },
+  { id: 3, name: "Jill" },
 ]);
 
 users.whereNotUndefined("name"); // [{ id: 1, name: "John" }, { id: 3, name: "Jill" }]
@@ -805,9 +813,9 @@ Alias to `where('column', 'between', [min, max])`.
 
 ```ts
 const users = collect([
-    { id: 1, age: 18 },
-    { id: 2, age: 20 },
-    { id: 3, age: 25 },
+  { id: 1, age: 18 },
+  { id: 2, age: 20 },
+  { id: 3, age: 25 },
 ]);
 
 users.whereBetween("age", [18, 25]); // [{ id: 1, age: 18 }, { id: 2, age: 20 }, { id: 3, age: 25 }]
@@ -819,9 +827,9 @@ Alias to `where('column', 'not between', [min, max])`.
 
 ```ts
 const users = collect([
-    { id: 1, age: 18 },
-    { id: 2, age: 20 },
-    { id: 3, age: 25 },
+  { id: 1, age: 18 },
+  { id: 2, age: 20 },
+  { id: 3, age: 25 },
 ]);
 
 users.whereNotBetween("age", [18, 25]); // []
@@ -833,9 +841,9 @@ Alias to `where('column', 'not', value)`.
 
 ```ts
 const users = collect([
-    { id: 1, age: 18 },
-    { id: 2, age: 20 },
-    { id: 3, age: 25 },
+  { id: 1, age: 18 },
+  { id: 2, age: 20 },
+  { id: 3, age: 25 },
 ]);
 
 users.whereNot("age", 20); // [{ id: 1, age: 18 }, { id: 3, age: 25 }]
@@ -846,11 +854,7 @@ users.whereNot("age", 20); // [{ id: 1, age: 18 }, { id: 3, age: 25 }]
 Alias to `where('column', 'exists')`.
 
 ```ts
-const users = collect([
-    { id: 1, age: 18 },
-    { id: 2, age: 20 },
-    { id: 3},
-]);
+const users = collect([{ id: 1, age: 18 }, { id: 2, age: 20 }, { id: 3 }]);
 
 users.whereExists("age"); // [{ id: 1, age: 18 }, { id: 2, age: 20 }]
 ```
@@ -860,14 +864,33 @@ users.whereExists("age"); // [{ id: 1, age: 18 }, { id: 2, age: 20 }]
 Alias to `where('column', 'not exists')`.
 
 ```ts
-const users = collect([
-    { id: 1, age: 18 },
-    { id: 2, age: 20 },
-    { id: 3},
-]);
+const users = collect([{ id: 1, age: 18 }, { id: 2, age: 20 }, { id: 3 }]);
 
 users.whereNotExists("age"); // [{ id: 3}]
 ```
+
+## Partition
+
+> Since `v1.1.0`
+
+The `partition` method will return two collections, the first one will contain the items that match the given criteria, and the second one will contain the items that do not match the given criteria.
+
+```ts
+const users = collect([
+  { id: 1, age: 18 },
+  { id: 2, age: 20 },
+  { id: 3, age: 25 },
+  { id: 4, age: 12 },
+  { id: 5, age: 15 },
+]);
+
+const [adults, children] = users.partition(user => user.age >= 18);
+
+console.log(adults.all()); // [{ id: 1, age: 18 }, { id: 2, age: 20 }, { id: 3, age: 25 }]
+console.log(children.all()); // [{ id: 4, age: 12 }, { id: 5, age: 15 }]
+```
+
+Be aware that the `partition` method returns two new collections not `arrays`.
 
 ## Group By
 
@@ -875,13 +898,13 @@ The `groupBy` method groups the collection's items by a given key.
 
 ```ts
 const users = collect([
-    { name: "Ahmed", age: 20 },
-    { name: "Mohamed", age: 25 },
-    { name: "Ali", age: 30 },
-    { name: "Hasan", age: 30 },
+  { name: "Ahmed", age: 20 },
+  { name: "Mohamed", age: 25 },
+  { name: "Ali", age: 30 },
+  { name: "Hasan", age: 30 },
 ]);
 
-users.groupBy("age"); 
+users.groupBy("age");
 // [
 //     {
 //     age: 20,
@@ -1007,10 +1030,10 @@ By default, the grouped data will be added in `data` key, but you can change tha
 
 ```ts
 const users = collect([
-    { name: "Ahmed", age: 20 },
-    { name: "Mohamed", age: 25 },
-    { name: "Ali", age: 30 },
-    { name: "Hasan", age: 30 },
+  { name: "Ahmed", age: 20 },
+  { name: "Mohamed", age: 25 },
+  { name: "Ali", age: 30 },
+  { name: "Hasan", age: 30 },
 ]);
 
 users.groupBy("age", "students");
@@ -1044,10 +1067,10 @@ The `sortBy` method sorts the collection's items by a given key.
 
 ```ts
 const users = collect([
-    { name: "Ahmed", age: 20 },
-    { name: "Mohamed", age: 25 },
-    { name: "Ali", age: 30 },
-    { name: "Hasan", age: 30 },
+  { name: "Ahmed", age: 20 },
+  { name: "Mohamed", age: 25 },
+  { name: "Ali", age: 30 },
+  { name: "Hasan", age: 30 },
 ]);
 
 users.sortBy("age"); // [{ name: "Ahmed", age: 20 }, { name: "Mohamed", age: 25 }, { name: "Ali", age: 30 }, { name: "Hasan", age: 30 }]
@@ -1059,10 +1082,10 @@ The `sortByDesc` method sorts the collection's items by a given key in descendin
 
 ```ts
 const users = collect([
-    { name: "Ahmed", age: 20 },
-    { name: "Mohamed", age: 25 },
-    { name: "Ali", age: 30 },
-    { name: "Hasan", age: 30 },
+  { name: "Ahmed", age: 20 },
+  { name: "Mohamed", age: 25 },
+  { name: "Ali", age: 30 },
+  { name: "Hasan", age: 30 },
 ]);
 
 users.sortByDesc("age"); // [{ name: "Ali", age: 30 }, { name: "Hasan", age: 30 }, { name: "Mohamed", age: 25 }, { name: "Ahmed", age: 20 }]
@@ -1074,16 +1097,16 @@ You can also sort the collection by multiple keys using `sortBy`.
 
 ```ts
 const users = collect([
-    { name: "Jane", age: 25 },
-    { name: "Jack", age: 30 },
-    { name: "Ali", age: 20 },
-    { name: "Hasan", age: 20 },
-    { name: "Hasan", age: 19 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Ali", age: 20 },
+  { name: "Hasan", age: 20 },
+  { name: "Hasan", age: 19 },
 ]);
 
 users.sortBy({
-    age: "asc",
-    name: "asc",
+  age: "asc",
+  name: "asc",
 }); // [{ name: "Hasan", age: 19 }, { name: "Ali", age: 20 }, { name: "Hasan", age: 20 }, { name: "Jane", age: 25 }, { name: "Jack", age: 30 }]
 ```
 
@@ -1141,13 +1164,13 @@ The `reorder` method will reorder the items in the collection using the given ke
 const numbers = collect([1, 2, 3, 4, 5, 6, 7]);
 
 numbers.reorder({
-    0: 3,
-    1: 4,
-    2: 5,
-    3: 6,
-    4: 0,
-    5: 1,
-    6: 2,
+  0: 3,
+  1: 4,
+  2: 5,
+  3: 6,
+  4: 0,
+  5: 1,
+  6: 2,
 }); // [5, 6, 7, 1, 2, 3, 4]
 ```
 
@@ -1325,8 +1348,8 @@ The `pluck` method will return a new collection of the given key.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jane" },
 ]);
 
 users.pluck("name"); // ["John", "Jane"]
@@ -1336,8 +1359,8 @@ It also accepts an array of strings to return multiple keys.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John", age: 20 },
-    { id: 2, name: "Jane", age: 25 },
+  { id: 1, name: "John", age: 20 },
+  { id: 2, name: "Jane", age: 25 },
 ]);
 
 users.pluck(["name", "age"]); // [{ name: "John", age: 20 }, { name: "Jane", age: 25 }]
@@ -1353,8 +1376,8 @@ The `select` method will allow you return only the given keys from each of eleme
 
 ```ts
 const users = collect([
-    { id: 1, name: "John", age: 20 },
-    { id: 2, name: "Jane", age: 25 },
+  { id: 1, name: "John", age: 20 },
+  { id: 2, name: "Jane", age: 25 },
 ]);
 
 users.select("name", "age"); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
@@ -1383,7 +1406,7 @@ The `last` method will return the last value from the collection without removin
 ```ts
 const numbers = collect([1, 2, 3, 4, 5]);
 
-numbers.last();// 5
+numbers.last(); // 5
 ```
 
 > `end` method is an alias for `last`.
@@ -1394,9 +1417,9 @@ The `firstWhere` receives the same exact arguments as `where` but it returns the
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "Jill" },
 ]);
 
 users.firstWhere("name", "John"); // { id: 1, name: "John" }
@@ -1408,10 +1431,10 @@ The `lastWhere` receives the same exact arguments as `where` but it returns the 
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "Jone" },
-    { id: 3, name: "John" },
-    { id: 4, name: "Jill" },
+  { id: 1, name: "John" },
+  { id: 2, name: "Jone" },
+  { id: 3, name: "John" },
+  { id: 4, name: "Jill" },
 ]);
 
 users.lastWhere("name", "John"); // { id: 3, name: "John" }
@@ -1426,8 +1449,8 @@ The `pop` method will `remove` and `return` the last value from the collection.
 ```ts
 const numbers = collect([1, 2, 3, 4, 5]);
 
-numbers.pop();// 5 
-console.log(numbers)// [1, 2, 3, 4]
+numbers.pop(); // 5
+console.log(numbers); // [1, 2, 3, 4]
 ```
 
 > Please note that this method is mutable as it returns the last value
@@ -1438,9 +1461,9 @@ The `value` method will return value of the given key from array of objects
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.value("name"); // John
@@ -1450,9 +1473,9 @@ If the given key does not exist, you can set default value to be returned instea
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.value("age", 20); // 20
@@ -1464,9 +1487,9 @@ The `lastValue` method will return the last value of the given key from array of
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.lastValue("name"); // Jane
@@ -1476,9 +1499,9 @@ If the given key does not exist, you can set default value to be returned instea
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.lastValue("age", 20); // 20
@@ -1490,9 +1513,9 @@ The `valueAt` method will return the value of the given index for the given key.
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.valueAt(1, "name"); // John
@@ -1504,9 +1527,9 @@ You can alternatively use dot notation to get the value of the given index and k
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.get("1.name"); // John
@@ -1516,9 +1539,9 @@ If the given key does not exist, you can set default value to be returned instea
 
 ```ts
 const users = collect([
-    { id: 1, name: "John" },
-    { id: 2, name: "John" },
-    { id: 3, name: "Jane" },
+  { id: 1, name: "John" },
+  { id: 2, name: "John" },
+  { id: 3, name: "Jane" },
 ]);
 
 users.valueAt(1, "age", 20); // 20
@@ -1560,12 +1583,12 @@ We can also sum value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.sum('age'); // 75
+users.sum("age"); // 75
 ```
 
 ### average
@@ -1582,12 +1605,12 @@ We can also average value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.average('age'); // 25
+users.average("age"); // 25
 ```
 
 > `avg` is an alias of `average`, you can use it as well.
@@ -1606,12 +1629,12 @@ We can also get the minimum value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.min('age'); // 20
+users.min("age"); // 20
 ```
 
 ### max
@@ -1628,12 +1651,12 @@ We can also get the maximum value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.max('age'); // 30
+users.max("age"); // 30
 ```
 
 ### median
@@ -1650,12 +1673,12 @@ We can also get the median value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.median('age'); // 25
+users.median("age"); // 25
 ```
 
 ### Plus
@@ -1672,12 +1695,12 @@ We can also increase the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.plus('age', 2); // [{ name: 'John', age: 22 }, { name: 'Jane', age: 27 }, { name: 'Jack', age: 32 }]
+users.plus("age", 2); // [{ name: 'John', age: 22 }, { name: 'Jane', age: 27 }, { name: 'Jack', age: 32 }]
 ```
 
 ### increment
@@ -1694,12 +1717,12 @@ We can also increase the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.increment('age'); // [{ name: 'John', age: 21 }, { name: 'Jane', age: 26 }, { name: 'Jack', age: 31 }]
+users.increment("age"); // [{ name: 'John', age: 21 }, { name: 'Jane', age: 26 }, { name: 'Jack', age: 31 }]
 ```
 
 ### Minus
@@ -1716,12 +1739,12 @@ We can also decrease the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.minus('age', 2); // [{ name: 'John', age: 18 }, { name: 'Jane', age: 23 }, { name: 'Jack', age: 28 }]
+users.minus("age", 2); // [{ name: 'John', age: 18 }, { name: 'Jane', age: 23 }, { name: 'Jack', age: 28 }]
 ```
 
 ### Decrement
@@ -1738,12 +1761,12 @@ We can also decrease the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.decrement('age'); // [{ name: 'John', age: 19 }, { name: 'Jane', age: 24 }, { name: 'Jack', age: 29 }]
+users.decrement("age"); // [{ name: 'John', age: 19 }, { name: 'Jane', age: 24 }, { name: 'Jack', age: 29 }]
 ```
 
 ### Multiply
@@ -1760,12 +1783,12 @@ We can also multiply the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.multiply('age', 2); // [{ name: 'John', age: 40 }, { name: 'Jane', age: 50 }, { name: 'Jack', age: 60 }]
+users.multiply("age", 2); // [{ name: 'John', age: 40 }, { name: 'Jane', age: 50 }, { name: 'Jack', age: 60 }]
 ```
 
 You can also double numbers directly by using `double` method.
@@ -1780,12 +1803,12 @@ Double key values
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.double('age'); // [{ name: 'John', age: 40 }, { name: 'Jane', age: 50 }, { name: 'Jack', age: 60 }]
+users.double("age"); // [{ name: 'John', age: 40 }, { name: 'Jane', age: 50 }, { name: 'Jack', age: 60 }]
 ```
 
 ### Divide
@@ -1802,21 +1825,21 @@ We can also divide the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.divide('age', 2); // [{ name: 'John', age: 10 }, { name: 'Jane', age: 12.5 }, { name: 'Jack', age: 15 }]
+users.divide("age", 2); // [{ name: 'John', age: 10 }, { name: 'Jane', age: 12.5 }, { name: 'Jack', age: 15 }]
 ```
 
 If the given number is `0` it will throw an error so you might need to wrap it in try/catch block.
 
 ```ts
 try {
-    users.divide('age', 0);
+  users.divide("age", 0);
 } catch (error) {
-    console.log(error.message); // Cannot divide by zero
+  console.log(error.message); // Cannot divide by zero
 }
 ```
 
@@ -1834,21 +1857,21 @@ We can also get the remainder of the division of key if the array is an array of
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.modulus('age', 2); // [{ name: 'John', age: 0 }, { name: 'Jane', age: 1 }, { name: 'Jack', age: 0 }]
+users.modulus("age", 2); // [{ name: 'John', age: 0 }, { name: 'Jane', age: 1 }, { name: 'Jack', age: 0 }]
 ```
 
 If the given number is `0` it will throw an error so you might need to wrap it in try/catch block.
 
 ```ts
 try {
-    users.modulus('age', 0);
+  users.modulus("age", 0);
 } catch (error) {
-    console.log(error.message); // Cannot have a modulus of zero
+  console.log(error.message); // Cannot have a modulus of zero
 }
 ```
 
@@ -1866,12 +1889,12 @@ We can also get the even numbers of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.even('age'); // [{ name: 'John', age: 20 }, { name: 'Jack', age: 30 }]
+users.even("age"); // [{ name: 'John', age: 20 }, { name: 'Jack', age: 30 }]
 ```
 
 ### Odd Numbers
@@ -1888,12 +1911,12 @@ We can also get the odd numbers of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.odd('age'); // [{ name: 'Jane', age: 25 }]
+users.odd("age"); // [{ name: 'Jane', age: 25 }]
 ```
 
 ### Working With Strings
@@ -1905,9 +1928,9 @@ The Collection provides some utilities to work with strings.
 The `concatString` method concatenates the given string to each element of the array.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.concatString(' Doe'); // ['John Doe', 'Jane Doe', 'Jack Doe']
+names.concatString(" Doe"); // ['John Doe', 'Jane Doe', 'Jack Doe']
 ```
 
 ### Append String
@@ -1915,21 +1938,21 @@ names.concatString(' Doe'); // ['John Doe', 'Jane Doe', 'Jack Doe']
 The `appendString` method appends the given string to each element of the array.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.appendString(' Doe'); // ['John Doe', 'Jane Doe', 'Jack Doe']
+names.appendString(" Doe"); // ['John Doe', 'Jane Doe', 'Jack Doe']
 ```
 
 We can also append the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.appendString('name', ' Doe'); // [{ name: 'John Doe', age: 20 }, { name: 'Jane Doe', age: 25 }, { name: 'Jack Doe', age: 30 }]
+users.appendString("name", " Doe"); // [{ name: 'John Doe', age: 20 }, { name: 'Jane Doe', age: 25 }, { name: 'Jack Doe', age: 30 }]
 ```
 
 > Note: The `appendString` method is an alias of `concatString`.
@@ -1939,21 +1962,21 @@ users.appendString('name', ' Doe'); // [{ name: 'John Doe', age: 20 }, { name: '
 The `prependString` method prepends the given string to each element of the array.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.prependString('Mr. '); // ['Mr. John', 'Mr. Jane', 'Mr. Jack']
+names.prependString("Mr. "); // ['Mr. John', 'Mr. Jane', 'Mr. Jack']
 ```
 
 We can also prepend the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.prependString('name', 'Mr. '); // [{ name: 'Mr. John', age: 20 }, { name: 'Mr. Jane', age: 25 }, { name: 'Mr. Jack', age: 30 }]
+users.prependString("name", "Mr. "); // [{ name: 'Mr. John', age: 20 }, { name: 'Mr. Jane', age: 25 }, { name: 'Mr. Jack', age: 30 }]
 ```
 
 ### Replace String
@@ -1961,29 +1984,29 @@ users.prependString('name', 'Mr. '); // [{ name: 'Mr. John', age: 20 }, { name: 
 The `replaceString` method replaces the given string with the given replacement string in each element of the array.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.replaceString('John', 'Johnny'); // ['Johnny', 'Jane', 'Jack']
+names.replaceString("John", "Johnny"); // ['Johnny', 'Jane', 'Jack']
 ```
 
 We can also replace the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.replaceString('John', 'Johnny', 'name'); // [{ name: 'Johnny', age: 20 }, { name: 'Jane', age: 25 }, { name: 'Jack', age: 30 }]
+users.replaceString("John", "Johnny", "name"); // [{ name: 'Johnny', age: 20 }, { name: 'Jane', age: 25 }, { name: 'Jack', age: 30 }]
 ```
 
 We can also pass regular expression for replacement as first argument.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.replaceString(/John/, 'Johnny'); // ['Johnny', 'Jane', 'Jack']
+names.replaceString(/John/, "Johnny"); // ['Johnny', 'Jane', 'Jack']
 ```
 
 ### Replace All String
@@ -1991,21 +2014,21 @@ names.replaceString(/John/, 'Johnny'); // ['Johnny', 'Jane', 'Jack']
 The `replaceAllString` method replaces all the given string with the given replacement string in each element of the array.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.replaceAllString('J', 'L'); // ['Lohn', 'Lane', 'Lack']
+names.replaceAllString("J", "L"); // ['Lohn', 'Lane', 'Lack']
 ```
 
 We can also replace all the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.replaceAllString('J', 'L', 'name'); // [{ name: 'Lohn', age: 20 }, { name: 'Lane', age: 25 }, { name: 'Lack', age: 30 }]
+users.replaceAllString("J", "L", "name"); // [{ name: 'Lohn', age: 20 }, { name: 'Lane', age: 25 }, { name: 'Lack', age: 30 }]
 ```
 
 > Kindly note that `replaceAllString` method does not accept regular expression, use `replaceString` instead.
@@ -2015,27 +2038,27 @@ users.replaceAllString('J', 'L', 'name'); // [{ name: 'Lohn', age: 20 }, { name:
 The `removeString` method removes the given string from each element of the array.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.removeString('John'); // ['', 'Jane', 'Jack']
+names.removeString("John"); // ['', 'Jane', 'Jack']
 ```
 
 We can also remove the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.removeString('John', 'name'); // [{ name: '', age: 20 }, { name: 'Jane', age: 25 }, { name: 'Jack', age: 30 }]
+users.removeString("John", "name"); // [{ name: '', age: 20 }, { name: 'Jane', age: 25 }, { name: 'Jack', age: 30 }]
 ```
 
 We can also pass regular expression for removal as first argument.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
 names.removeString(/John/); // ['', 'Jane', 'Jack']
 ```
@@ -2045,21 +2068,21 @@ names.removeString(/John/); // ['', 'Jane', 'Jack']
 The `removeAllString` method removes all the given string from each element of the array.
 
 ```ts
-const names = collect(['John', 'Jane', 'Jack']);
+const names = collect(["John", "Jane", "Jack"]);
 
-names.removeAllString('J'); // ['ohn', 'ane', 'ack']
+names.removeAllString("J"); // ['ohn', 'ane', 'ack']
 ```
 
 We can also remove all the value of key if the array is an array of objects.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.removeAllString('J', 'name'); // [{ name: 'ohn', age: 20 }, { name: 'ane', age: 25 }, { name: 'ack', age: 30 }]
+users.removeAllString("J", "name"); // [{ name: 'ohn', age: 20 }, { name: 'ane', age: 25 }, { name: 'ack', age: 30 }]
 ```
 
 > Kindly note that `removeAllString` method does not accept regular expression, use `removeString` instead.
@@ -2070,15 +2093,15 @@ The `equals` method determines if the given array is equal to the current array.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
 users.equals([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]); // true
 ```
 
@@ -2086,16 +2109,18 @@ It also can check against another collection not just arrays.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.equals(collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-])); // true
+users.equals(
+  collect([
+    { name: "John", age: 20 },
+    { name: "Jane", age: 25 },
+    { name: "Jack", age: 30 },
+  ]),
+); // true
 ```
 
 > Kindly note that the order of the elements in the array is neglected, it will check if it contains the exact content but not exact order either on the array elements order of the object keys order.
@@ -2108,13 +2133,13 @@ We can perform some actions on the array without modifying the original array us
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.tap((collection) => {
-    collection.push({ name: 'Jill', age: 35 });
+users.tap(collection => {
+  collection.push({ name: "Jill", age: 35 });
 });
 ```
 
@@ -2124,13 +2149,13 @@ The `forEach` method iterates over the array and passes each value to the given 
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.forEach((user) => {
-    console.log(user);
+users.forEach(user => {
+  console.log(user);
 });
 ```
 
@@ -2146,12 +2171,12 @@ The `except` method will return all elements that does not match the given crite
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.except((user) => user.age > 25); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
+users.except(user => user.age > 25); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
 ```
 
 > `reject` is an alias of `except` method.
@@ -2162,12 +2187,12 @@ The `exceptFirst` method will return all elements except the first element that 
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 25 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 25 },
 ]);
 
-users.exceptFirst((user) => user.age === 25); // [{ name: 'John', age: 20 }, { name: 'Jack', age: 25 }]
+users.exceptFirst(user => user.age === 25); // [{ name: 'John', age: 20 }, { name: 'Jack', age: 25 }]
 ```
 
 > `rejectFirst` is an alias of `exceptFirst` method.
@@ -2178,12 +2203,12 @@ The `exceptLast` method will return all elements except the last element that ma
 
 ```ts
 const users = collect([
-    { name: 'John', age: 25 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
+  { name: "John", age: 25 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
 ]);
 
-users.exceptLast((user) => user.age === 25); // [{ name: 'John', age: 25 }, { name: 'Jack', age: 30 }]
+users.exceptLast(user => user.age === 25); // [{ name: 'John', age: 25 }, { name: 'Jack', age: 30 }]
 ```
 
 > `rejectLast` is an alias of `exceptLast` method.
@@ -2208,10 +2233,10 @@ The `skip` method skips the given number of items in the array.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.skip(2); // [{ name: 'Jack', age: 30 }, { name: 'Jill', age: 35 }]
@@ -2223,10 +2248,10 @@ The `skipUntil` method skips items in the array until the given value is found.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.skipUntil(user => user.age >= 30); // [{ name: 'Jack', age: 30 }, { name: 'Jill', age: 35 }]
@@ -2238,10 +2263,10 @@ The `skipLast` method skips the given number of items from the end of the array.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.skipLast(2); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
@@ -2253,10 +2278,10 @@ The `skipLastUntil` method skips items from the end of the array until the given
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.skipLastUntil(user => user.age <= 30); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
@@ -2268,10 +2293,10 @@ The `skipWhile` method skips items in the array while the given value is true.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.skipWhile(user => user.age < 30); // [{ name: 'Jack', age: 30 }, { name: 'Jill', age: 35 }]
@@ -2283,10 +2308,10 @@ The `skipTo` method skips items in the array and returns all elements starting f
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.skipTo(2); // [{ name: 'Jack', age: 30 }, { name: 'Jill', age: 35 }]
@@ -2298,10 +2323,10 @@ The `take` method limits the number of items in the array.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.take(2); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
@@ -2315,10 +2340,10 @@ The `takeUntil` method limits items in the array until the given value is found.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.takeUntil(user => user.age >= 30); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
@@ -2330,10 +2355,10 @@ The `takeLast` method limits the given number of items from the end of the array
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.takeLast(2); // [{ name: 'Jack', age: 30 }, { name: 'Jill', age: 35 }]
@@ -2345,10 +2370,10 @@ The `takeWhile` method limits items in the array while the given value is true.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill', age: 35 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill", age: 35 },
 ]);
 
 users.takeWhile(user => user.age < 30); // [{ name: 'John', age: 20 }, { name: 'Jane', age: 25 }]
@@ -2424,13 +2449,13 @@ The `count` method will return the number of occurrences for the given key and v
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill' },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill" },
 ]);
 
-users.count('age'); // 3
+users.count("age"); // 3
 ```
 
 ### Counting each value for the given key
@@ -2439,13 +2464,13 @@ The `countBy` method will return the number of occurrences for each value of the
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
-    { name: 'Jack', age: 30 },
-    { name: 'Jill' },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
+  { name: "Jack", age: 30 },
+  { name: "Jill" },
 ]);
 
-users.countBy('age'); // { 20: 1, 25: 1, 30: 1 }
+users.countBy("age"); // { 20: 1, 25: 1, 30: 1 }
 ```
 
 ## Iterating
@@ -2456,7 +2481,7 @@ Collections are `iterable`, so you can loop over it using `for...of` loop.
 const numbers = collect([1, 2, 3, 4, 5]);
 
 for (const number of numbers) {
-    console.log(number);
+  console.log(number);
 }
 ```
 
@@ -2504,8 +2529,8 @@ The `has` method will return true if the given callback is true.
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20 },
-    { name: 'Jane', age: 25 },
+  { name: "John", age: 20 },
+  { name: "Jane", age: 25 },
 ]);
 
 users.has(user => user.age > 20); // true
@@ -2540,7 +2565,7 @@ const numbers = collect([1, 2, 3, 4, 5]);
 
 numbers.join(); // '12345'
 
-numbers.join(', '); // '1, 2, 3, 4, 5'
+numbers.join(", "); // '1, 2, 3, 4, 5'
 ```
 
 > `implode` is an alias of `join` method.
@@ -2571,13 +2596,13 @@ The `collectFrom` method will allow you to collect items from a given key of eac
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20, pets: ['dog', 'cat'] },
-    { name: 'Jane', age: 25, pets: ['dog', 'cat'] },
-    { name: 'Jack', age: 30, pets: ['dog', 'cat'] },
-    { name: 'Jill', age: 35, pets: ['dog', 'cat'] },
+  { name: "John", age: 20, pets: ["dog", "cat"] },
+  { name: "Jane", age: 25, pets: ["dog", "cat"] },
+  { name: "Jack", age: 30, pets: ["dog", "cat"] },
+  { name: "Jill", age: 35, pets: ["dog", "cat"] },
 ]);
 
-users.collectFrom('pets'); // ['dog', 'cat', 'dog', 'cat', 'dog', 'cat', 'dog', 'cat']
+users.collectFrom("pets"); // ['dog', 'cat', 'dog', 'cat', 'dog', 'cat', 'dog', 'cat']
 ```
 
 ## Collecting from certain key only
@@ -2586,13 +2611,13 @@ The `collectFromKey` method allow you to create a new collection from the given 
 
 ```ts
 const users = collect([
-    { name: 'John', age: 20, pets: ['dog', 'cat'] },
-    { name: 'Jane', age: 25, pets: ['dog', 'cat'] },
-    { name: 'Jack', age: 30, pets: ['dog', 'cat'] },
-    { name: 'Jill', age: 35, pets: ['dog', 'cat'] },
+  { name: "John", age: 20, pets: ["dog", "cat"] },
+  { name: "Jane", age: 25, pets: ["dog", "cat"] },
+  { name: "Jack", age: 30, pets: ["dog", "cat"] },
+  { name: "Jill", age: 35, pets: ["dog", "cat"] },
 ]);
 
-users.collectFromKey('0.pets'); // ['dog', 'cat']
+users.collectFromKey("0.pets"); // ['dog', 'cat']
 ```
 
 ## Collecting from iterators
@@ -2620,5 +2645,5 @@ const numbers = collect.create(10, 0); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Also specify initial value based on index.
 
 ```ts
-const numbers = collect.create(10, (index) => index); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+const numbers = collect.create(10, index => index); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```

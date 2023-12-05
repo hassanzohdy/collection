@@ -572,22 +572,15 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@mongez/reinforcements@^2.x.x":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@mongez/reinforcements/-/reinforcements-2.2.2.tgz#2a829992b9584832ef1bf209057fafe07f707353"
-  integrity sha512-WV6cSv1ZVLb+H+orMfTUVKHU1cd5nebXe5ahe0w5rFBRj9mj7dxhuKTZ0zU87jestPG7/Whx8/Imey1mCjADzg==
-  dependencies:
-    "@mongez/supportive-is" "^1.0.6"
+"@mongez/reinforcements@^2.3.8":
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@mongez/reinforcements/-/reinforcements-2.3.9.tgz#3e17b424185a21236f96f8721ed11c114fb632ea"
+  integrity sha512-bLXa+t8KMXFLkIMasEo3FRamTDJbnHWRXf4PfZDAiI/xKLiUyFk/cHRoik4H7Su8jUX51IIYIx4+0BURy2W/bw==
 
-"@mongez/supportive-is@^1.0.6":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@mongez/supportive-is/-/supportive-is-1.0.9.tgz#c20dc9eb8c0db9dfdbfd73f83ed49d5552f92d1c"
-  integrity sha512-6ejPqrcSlZbazndWg822lcDqfBcMtvYbhvxRef+KzG6faT38Kc8JVj7JHcIGyBMPEPrjr88Lk+O64XnxKBzZrg==
-
-"@mongez/supportive-is@~1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@mongez/supportive-is/-/supportive-is-1.0.12.tgz#3f2d8e4fd2d0ed4c140feb5820d790331f26284d"
-  integrity sha512-d+QnGN9WFRFoUTE8PS90YpdvyvCb5NjYawUDqIwW3k2ZcTR5PBkgm+EqgsY/sLKBONJyG+6uz6zYb95AzdDhkA==
+"@mongez/supportive-is@^2.0.0":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@mongez/supportive-is/-/supportive-is-2.0.3.tgz#73966c4bfe9b2cc2f226085b9b98d507365eeb5b"
+  integrity sha512-LrFI/B/eHsqGkTunWQxWhmpWbHBlBp3ihPo8+SQhap0RUMd29HCcLVu9o7yhG0WYdmjCeBIKDt+QjhH+HniK9Q==
 
 "@sinclair/typebox@^0.25.16":
   version "0.25.24"

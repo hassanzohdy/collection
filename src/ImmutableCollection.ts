@@ -1790,7 +1790,7 @@ export class ImmutableCollection<ItemType = any> {
       {
         items: ItemType[];
         [key: string]: any;
-      }[]
+      }
     >(groupBy(this.items as any, keys as string | string[], "items") as any);
   }
 
@@ -1811,6 +1811,31 @@ export class ImmutableCollection<ItemType = any> {
     });
 
     return new ImmutableCollection<ItemType>(items);
+  }
+
+  /**
+   * Partition the data into two collections using the given callback
+   */
+  public partition(
+    callback: (item: ItemType, index: number) => boolean,
+  ): [ImmutableCollection<ItemType>, ImmutableCollection<ItemType>] {
+    const first: ItemType[] = [];
+    const second: ItemType[] = [];
+
+    for (let i = 0; i < this.items.length; i++) {
+      const item = this.items[i];
+
+      if (callback(item, i) === true) {
+        first.push(item);
+      } else {
+        second.push(item);
+      }
+    }
+
+    return [
+      new ImmutableCollection<ItemType>(first),
+      new ImmutableCollection<ItemType>(second),
+    ];
   }
 
   /**
