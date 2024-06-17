@@ -2,6 +2,7 @@ import {
   areEqual,
   average,
   chunk,
+  clone,
   count,
   countBy,
   even,
@@ -19,6 +20,7 @@ import {
   set,
   shuffle,
   sum,
+  trim,
   unique,
   unshiftUnique,
 } from "@mongez/reinforcements";
@@ -26,6 +28,14 @@ import { isEmpty } from "@mongez/supportive-is";
 import { ComparisonOperator, Operators } from "./types";
 
 const NotExists = Symbol("NotExists");
+
+const getItemValue = (item: any, key: string, defaultValue?: any) => {
+  if (typeof item?.get === "function") {
+    return item.get(key) ?? defaultValue;
+  }
+
+  return get(item, key, defaultValue);
+};
 
 export class ImmutableCollection<ItemType = any> {
   /**
@@ -179,7 +189,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, get(item, key) + amount);
+        return set(item as any, key, getItemValue(item, key) + amount);
       }
 
       return item + amount;
@@ -207,7 +217,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, get(item, key) - amount);
+        return set(item as any, key, getItemValue(item, key) - amount);
       }
 
       return Number(item) - amount;
@@ -235,7 +245,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, Number(get(item, key)) * amount);
+        return set(item as any, key, Number(getItemValue(item, key)) * amount);
       }
 
       return Number(item) * amount;
@@ -268,7 +278,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, get(item, key) / amount);
+        return set(item as any, key, getItemValue(item, key) / amount);
       }
 
       return Number(item) / amount;
@@ -301,7 +311,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, get(item, key) % amount);
+        return set(item as any, key, getItemValue(item, key) % amount);
       }
 
       return Number(item) % amount;
@@ -334,7 +344,7 @@ export class ImmutableCollection<ItemType = any> {
   public appendString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item as any, key, get(item, key) + string);
+        return set(item as any, key, getItemValue(item, key) + string);
       }
 
       return item + string;
@@ -347,7 +357,7 @@ export class ImmutableCollection<ItemType = any> {
   public prependString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item as any, key, string + get(item, key));
+        return set(item as any, key, string + getItemValue(item, key));
       }
 
       return string + item;
@@ -360,7 +370,7 @@ export class ImmutableCollection<ItemType = any> {
   public concatString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item as any, key, get(item, key).concat(string));
+        return set(item as any, key, getItemValue(item, key).concat(string));
       }
 
       return String(item).concat(string);
@@ -380,7 +390,7 @@ export class ImmutableCollection<ItemType = any> {
         return set(
           item as any,
           key,
-          get(item, key).replace(string, replacement),
+          getItemValue(item, key).replace(string, replacement),
         );
       }
 
@@ -397,7 +407,7 @@ export class ImmutableCollection<ItemType = any> {
         return set(
           item as any,
           key,
-          get(item, key).replace(new RegExp(string, "g"), replacement),
+          getItemValue(item, key).replace(new RegExp(string, "g"), replacement),
         );
       }
 
@@ -411,7 +421,11 @@ export class ImmutableCollection<ItemType = any> {
   public removeString(string: string | RegExp, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item as any, key, get(item, key).replace(string, ""));
+        return set(
+          item as any,
+          key,
+          getItemValue(item, key).replace(string, ""),
+        );
       }
 
       return String(item).replace(string, "");
@@ -427,7 +441,7 @@ export class ImmutableCollection<ItemType = any> {
         return set(
           item as any,
           key,
-          get(item, key).replace(new RegExp(string, "g"), ""),
+          getItemValue(item, key).replace(new RegExp(string, "g"), ""),
         );
       }
 
@@ -517,7 +531,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return new ImmutableCollection<ItemType>(
       this.items.filter(item => {
-        const value = get(item, key);
+        const value = getItemValue(item, key);
 
         if (foundValues.includes(value)) {
           return false;
@@ -671,7 +685,7 @@ export class ImmutableCollection<ItemType = any> {
    */
   public value(key: keyof ItemType, defaultValue: any = null) {
     for (let item of this.items) {
-      let itemValue = get(item, key as string, NotExists);
+      let itemValue = getItemValue(item, key as string, NotExists);
       if (itemValue !== NotExists) {
         return itemValue;
       }
@@ -684,7 +698,11 @@ export class ImmutableCollection<ItemType = any> {
    * Get value for the given key at the given index
    */
   public valueAt(index: number, key: keyof ItemType, defaultValue: any = null) {
-    return get(this.items, `${index}.${key as string}`, defaultValue);
+    const item = this.items[index];
+
+    return item
+      ? getItemValue(item, key as string, defaultValue)
+      : defaultValue;
   }
 
   /**
@@ -850,8 +868,8 @@ export class ImmutableCollection<ItemType = any> {
       const items = [...this.items];
 
       items.sort((a: any, b: any) => {
-        const aValue: any = get(a, sortType as string);
-        const bValue: any = get(b, sortType as string);
+        const aValue: any = getItemValue(a, sortType as string);
+        const bValue: any = getItemValue(b, sortType as string);
 
         if (aValue < bValue) {
           return -1;
@@ -877,8 +895,8 @@ export class ImmutableCollection<ItemType = any> {
 
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i];
-          const aValue: any = get(a, key);
-          const bValue: any = get(b, key);
+          const aValue: any = getItemValue(a, key);
+          const bValue: any = getItemValue(b, key);
 
           if (aValue < bValue) {
             return sortType[key] === "asc" ? -1 : 1;
@@ -904,8 +922,8 @@ export class ImmutableCollection<ItemType = any> {
   public sortByDesc(key: string) {
     return new ImmutableCollection<ItemType>(
       this.items.sort((a: any, b: any) => {
-        const aValue: any = get(a, key);
-        const bValue: any = get(b, key);
+        const aValue: any = getItemValue(a, key);
+        const bValue: any = getItemValue(b, key);
 
         if (aValue < bValue) {
           return 1;
@@ -1395,7 +1413,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.filter((item: any) => {
       const itemValue: any = isPrimitive
         ? item
-        : get(item as object, key, NotExists);
+        : getItemValue(item, key, NotExists);
 
       if (isRegex) {
         return (value as RegExp).test(String(itemValue));
@@ -1589,7 +1607,7 @@ export class ImmutableCollection<ItemType = any> {
     const [key, values] = args;
 
     return this.filter((item: any) => {
-      return values.includes(get(item, key));
+      return values.includes(getItemValue(item, key));
     });
   }
 
@@ -1610,7 +1628,7 @@ export class ImmutableCollection<ItemType = any> {
     const [key, value] = args;
 
     return this.filter((item: any) => {
-      return get(item, key) !== value;
+      return getItemValue(item, key) !== value;
     });
   }
 
@@ -1635,7 +1653,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.filter((item: any) => {
       const [min, max] = values;
 
-      const itemValue: any = get(item, key);
+      const itemValue: any = getItemValue(item, key);
 
       return itemValue >= min && itemValue <= (max as any);
     });
@@ -1662,7 +1680,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.filter((item: any) => {
       const [min, max] = values;
 
-      const itemValue: any = get(item, key);
+      const itemValue: any = getItemValue(item, key);
 
       return itemValue < min || itemValue > (max as any);
     });
@@ -1673,7 +1691,7 @@ export class ImmutableCollection<ItemType = any> {
    */
   public whereEmpty(key?: string) {
     return this.filter((item: any) => {
-      let value = key ? get(item, key) : item;
+      let value = key ? getItemValue(item, key) : item;
 
       return isEmpty(value);
     });
@@ -1684,7 +1702,7 @@ export class ImmutableCollection<ItemType = any> {
    */
   public whereNotEmpty(key?: string) {
     return this.filter((item: any) => {
-      let value = key ? get(item, key) : item;
+      let value = key ? getItemValue(item, key) : item;
 
       return !isEmpty(value);
     });
@@ -1702,7 +1720,7 @@ export class ImmutableCollection<ItemType = any> {
    */
   public whereNull(key?: string) {
     return this.filter((item: any) => {
-      let value = key ? get(item, key) : item;
+      let value = key ? getItemValue(item, key) : item;
 
       return value === null;
     });
@@ -1713,7 +1731,7 @@ export class ImmutableCollection<ItemType = any> {
    */
   public whereNotNull(key?: string) {
     return this.filter((item: any) => {
-      const value = key ? get(item, key) : item;
+      const value = key ? getItemValue(item, key) : item;
 
       return value !== null;
     });
@@ -1724,7 +1742,7 @@ export class ImmutableCollection<ItemType = any> {
    */
   public whereNotUndefined(key?: string) {
     return this.filter((item: any) => {
-      const value = key ? get(item, key) : item;
+      const value = key ? getItemValue(item, key) : item;
 
       return value !== undefined;
     });
@@ -1735,7 +1753,7 @@ export class ImmutableCollection<ItemType = any> {
    */
   public whereUndefined(key?: string) {
     return this.filter((item: any) => {
-      const value = key ? get(item, key) : item;
+      const value = key ? getItemValue(item, key) : item;
 
       return value === undefined;
     });
@@ -1806,7 +1824,7 @@ export class ImmutableCollection<ItemType = any> {
     const items: any[] = [];
 
     this.items.forEach(item => {
-      const value = get(item, key);
+      const value = getItemValue(item, key);
 
       if (Array.isArray(value)) {
         items.push(...value);
@@ -1850,6 +1868,43 @@ export class ImmutableCollection<ItemType = any> {
   public collectFromKey(index: number | string, key?: string);
   public collectFromKey(...args) {
     return new ImmutableCollection<ItemType>(get(this.items, args.join(".")));
+  }
+
+  /**
+   * Convert each item to the string type
+   */
+  public string() {
+    return this.map(item => String(item));
+  }
+
+  /**
+   * Convert each item to the number type
+   */
+  public number() {
+    return this.map(item => Number(item));
+  }
+
+  /**
+   * Convert each item to the boolean type
+   */
+  public boolean() {
+    return this.map(item => Boolean(item));
+  }
+
+  /**
+   * Trim each item in the collection
+   * @param value to be trimmed, default is space
+   */
+  public trim(value = " ", key?: string) {
+    return this.map(item => {
+      if (key) {
+        set(item as any, key, trim(String(getItemValue(item, key)), value));
+
+        return item;
+      }
+
+      return trim(String(item), value);
+    });
   }
 
   /**

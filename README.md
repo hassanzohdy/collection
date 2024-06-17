@@ -892,6 +892,34 @@ console.log(children.all()); // [{ id: 4, age: 12 }, { id: 5, age: 15 }]
 
 Be aware that the `partition` method returns two new collections not `arrays`.
 
+## Filtering using `get` method
+
+> Since `v1.2.0`
+
+If items are an instance of classes that provide `get` method to get values from the instance, the collection will use it as a getter function to get a value from the item, otherwise, it will be taken directly from the item itself.
+
+```ts
+class User {
+  constructor(public userData: any) {}
+
+  get(key: string) {
+    return this.userData[key];
+  }
+}
+
+const users = collect([
+  new User({ id: 1, name: "John" }),
+  new User({ id: 2, name: "Jane" }),
+  new User({ id: 3, name: "Jill" }),
+]);
+
+users.where("id", ">", 1); // [User { userData: { id: 2, name: 'Jane' } }, User { userData: { id: 3, name: 'Jill' } }]
+```
+
+This will make it much easier when dealing with some database model classes to filter the data.
+
+> The returned value in the where method will be the class instance itself not a plain object.
+
 ## Group By
 
 The `groupBy` method groups the collection's items by a given key.
@@ -905,26 +933,47 @@ const users = collect([
 ]);
 
 users.groupBy("age");
-// [
-//     {
-//     age: 20,
-//     data: [{ name: "Ahmed", age: 20 }],
-//     },
-//     {
-//     age: 25,
-//     data: [{ name: "Mohamed", age: 25 }],
-//     },
-//     {
-//     age: 30,
-//     data: [
-//         { name: "Ali", age: 30 },
-//         { name: "Hasan", age: 30 },
-//     ],
-//     },
-// ]
 ```
 
-It basically creates a new array of objects, each object contains the key and the items that have the same value for that key will be added in `data` key for that grouped data.
+It outputs:
+
+```json
+[
+  {
+    "age": 20,
+    "items": [
+      {
+        "name": "Ahmed",
+        "age": 20
+      }
+    ]
+  },
+  {
+    "age": 25,
+    "items": [
+      {
+        "name": "Mohamed",
+        "age": 25
+      }
+    ]
+  },
+  {
+    "age": 30,
+    "items": [
+      {
+        "name": "Ali",
+        "age": 30
+      },
+      {
+        "name": "Hasan",
+        "age": 30
+      }
+    ]
+  }
+]
+```
+
+It basically creates a new array of objects, each object contains the key and the items that have the same value for that key will be added in `items` key for that grouped data.
 
 ### Group By Multiple Keys
 
@@ -1056,6 +1105,8 @@ users.groupBy("age", "students");
 //     },
 // ]
 ```
+
+> Please note that the items returned from `groupBy` method are not instances of `Collection` class, they are just plain arrays.
 
 ## Sorting
 
@@ -2569,6 +2620,77 @@ numbers.join(", "); // '1, 2, 3, 4, 5'
 ```
 
 > `implode` is an alias of `join` method.
+
+## Cast items into boolean values
+
+> Since version `1.2.0`
+
+The `boolean` method will cast all items into boolean values.
+
+```ts
+const numbers = collect([0, 1, 2, 3, 4, 5]);
+
+numbers.boolean(); // [0, true, true, true, true, true]
+```
+
+## Cast items into number values
+
+> Since version `1.2.0`
+
+The `number` method will cast all items into number values.
+
+```ts
+const numbers = collect(["0", "1", "2", "3", "4", "5"]);
+
+numbers.number(); // [0, 1, 2, 3, 4, 5]
+```
+
+## Cast items into string values
+
+> Since version `1.2.0`
+
+The `string` method will cast all items into string values.
+
+```ts
+const numbers = collect([0, 1, 2, 3, 4, 5]);
+
+numbers.string(); // ['0', '1', '2', '3', '4', '5']
+```
+
+## Trim items whitespace
+
+> Since version `1.2.0`
+
+Using `trim` method will remove whitespace from the beginning and end of each item.
+
+```ts
+const numbers = collect([" 0 ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 "]);
+
+numbers.trim(); // ['0', '1', '2', '3', '4', '5']
+```
+
+You can also set what to be trimmed by passing the characters to be trimmed.
+
+```ts
+const numbers = collect(["-0-", "-1-", "-2-", "-3-", "-4-", "-5-"]);
+
+numbers.trim("-"); // ['0', '1', '2', '3', '4', '5']
+```
+
+If items are objects, we can define the key to be trimmed.
+
+```ts
+const users = collect([
+  { name: " John " },
+  { name: " Jane " },
+  { name: " Jack " },
+  { name: " Jill " },
+]);
+
+users.trim("name"); // [{ name: 'John' }, { name: 'Jane' }, { name: 'Jack' }, { name: 'Jill' }]
+```
+
+> Please note that this method will modify the original collection.
 
 ## Convert to json string
 

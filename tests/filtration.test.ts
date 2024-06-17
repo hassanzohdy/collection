@@ -78,6 +78,27 @@ describe("collection/ImmutableCollection/filtration", () => {
     ]);
   });
 
+  it("should filter data where each item object has get method to get the value using it", () => {
+    class Item {
+      public constructor(protected data: any) {}
+
+      public get(key: any) {
+        return this.data[key];
+      }
+    }
+
+    const collection = collect([
+      new Item({ name: "Ahmed", age: 20 }),
+      new Item({ name: "Ahmed", age: 25 }),
+      new Item({ name: "Ali", age: 30 }),
+    ]);
+
+    expect(collection.where("name", "Ahmed").all()).toEqual([
+      new Item({ name: "Ahmed", age: 20 }),
+      new Item({ name: "Ahmed", age: 25 }),
+    ]);
+  });
+
   it("should filter data where key is equal to the given number", () => {
     const collection = collect([
       { name: "Ahmed", age: 20 },
@@ -819,7 +840,7 @@ describe("collection/ImmutableCollection/filtration", () => {
     const collection = collect([
       { name: "Ahmed", age: 20, numbers: [1, 2, 3], is_admin: true },
       { name: "Ahmed", age: "25", numbers: [2, 3, 4], is_admin: true },
-      { name: "Ali", age: 30, numbers: [5, 6], is_admin: false },
+      { name: "Ali", age: 20, numbers: [5, 6], is_admin: false },
       { name: "Ali", age: 30, numbers: [], is_admin: false },
       { name: "Ali", age: null, numbers: [], is_admin: null },
       { name: "Hasan", age: null, numbers: [], is_admin: undefined },
@@ -831,6 +852,7 @@ describe("collection/ImmutableCollection/filtration", () => {
       numbers: [1, 2, 3],
       is_admin: true,
     });
+
     expect(collection.firstWhere("name", "Hasan")).toEqual({
       name: "Hasan",
       age: null,
@@ -843,18 +865,21 @@ describe("collection/ImmutableCollection/filtration", () => {
       numbers: [1, 2, 3],
       is_admin: true,
     });
+
     expect(collection.firstWhere("is_admin", false)).toEqual({
       name: "Ali",
-      age: 30,
+      age: 20,
       numbers: [5, 6],
       is_admin: false,
     });
+
     expect(collection.firstWhere("is_admin", null)).toEqual({
       name: "Ali",
       age: null,
       numbers: [],
       is_admin: null,
     });
+
     expect(collection.firstWhere("is_admin", undefined)).toEqual({
       name: "Hasan",
       age: null,
