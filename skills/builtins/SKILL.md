@@ -1,0 +1,94 @@
+---
+name: mongez-collection-builtins
+description: Array.prototype parity methods on ImmutableCollection — map, filter, flat, flatMap, reduce, find, every, some, join, forEach, keys, values, entries, and conversion helpers.
+when_to_use: Use when the user calls map(), filter(), flat(), flatMap(), reduce(), reduceRight(), find(), findIndex(), indexOf(), includes(), every(), some(), join(), forEach(), keys(), values(), entries(), toArray(), all(), toJson(), or spreads/iterates a collection.
+---
+
+# Array-prototype parity
+
+Every method that has a matching `Array.prototype` is documented here. They all delegate to the underlying array and produce a new collection (for transforms) or a scalar value (for reads).
+
+## Transforms (return a new collection)
+
+```ts
+c.map<U>(cb: (item: T, index: number) => U): ImmutableCollection<U>
+c.filter(cb: (item: T, index: number) => boolean): ImmutableCollection<T>
+c.flat(depth?: number): ImmutableCollection<any>
+c.flatMap(cb: (item: T, index: number) => any): ImmutableCollection<any>
+c.takeWhile(cb): ImmutableCollection<T>          // alias for filter
+c.removeAll(cb): ImmutableCollection<T>          // alias for filter (confusing name)
+```
+
+```ts
+collect([1, 2, 3]).map(n => n * 2);                       // [2, 4, 6]
+collect([1, 2, 3]).filter(n => n > 1);                    // [2, 3]
+collect([1, [2, 3], [4]]).flat();                         // [1, 2, 3, 4]
+collect([1, 2, 3]).flatMap(n => [n, n + 100]);            // [1, 101, 2, 102, 3, 103]
+```
+
+> `removeAll` is **not** a remove operation — it's a filter that KEEPS the matching items. Despite the name, it's the same as `filter`. Use `reject(...)` for the inverse.
+
+## Reads (return a scalar)
+
+```ts
+c.reduce<Acc>(cb, initialValue?): Acc
+c.reduceRight(cb, initialValue?): any
+c.find(cb): T | undefined
+c.findIndex(cb): number
+c.indexOf(item, fromIndex?): number
+c.lastIndexOf(item, fromIndex?): number
+c.includes(item): boolean
+c.contains(item): boolean           // alias
+c.every(cb): boolean
+c.some(cb): boolean
+c.join(separator?): string
+c.implode(separator?): string       // alias
+```
+
+```ts
+collect([1, 2, 3, 4]).reduce((acc, n) => acc + n, 0);     // 10
+collect([1, 2, 3]).find(n => n > 1);                      // 2
+collect([1, 2, 3]).every(n => n > 0);                     // true
+collect([1, 2, 3]).join("-");                             // "1-2-3"
+```
+
+> **Pinned hazard**: `reduce(cb)` without an `initialValue` currently produces `NaN` for numeric arrays — the wrapper passes `initialValue` even when undefined, which changes Array.prototype.reduce's semantics. Always pass an initial value (`reduce(cb, 0)`).
+
+## Iteration / shape
+
+```ts
+c.forEach(cb): this           // executes cb for each item, returns the collection
+c.each(cb): this              // alias for forEach
+c.keys(): ImmutableCollection<number>     // [0, 1, 2, ...]
+c.values(): ImmutableCollection<T>
+c.entries(): ImmutableCollection<[number, T]>
+c.indexes(): ImmutableCollection<number>  // same as keys()
+c.length: number                          // getter
+```
+
+```ts
+collect(["a", "b", "c"]).keys().all();    // [0, 1, 2]
+collect(["a", "b", "c"]).entries().all(); // [[0, "a"], [1, "b"], [2, "c"]]
+```
+
+## for-of / spread / Array.from
+
+A collection IS an Iterable.
+
+```ts
+const c = collect([1, 2, 3]);
+for (const n of c) /* ... */;
+[...c];                  // [1, 2, 3]
+Array.from(c);           // [1, 2, 3]
+```
+
+## Conversion
+
+```ts
+c.toArray(): T[]                     // returns the live reference (mutating it mutates the collection)
+c.toArray(mapper): U[]               // maps before returning
+c.all(): T[]                         // alias for toArray()
+c.toString(): string                 // Array.prototype.toString semantics
+c.toJson(): string                   // JSON.stringify(items)
+c.join(sep?): string
+```

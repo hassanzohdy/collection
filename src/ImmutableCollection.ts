@@ -9,9 +9,7 @@ import {
   evenIndexes,
   get,
   groupBy,
-  max,
   median,
-  min,
   odd,
   oddIndexes,
   only,
@@ -22,16 +20,41 @@ import {
   sum,
   trim,
   unique,
-  unshiftUnique,
 } from "@mongez/reinforcements";
 import { isEmpty } from "@mongez/supportive-is";
 import { ComparisonOperator, Operators } from "./types";
 
 const NotExists = Symbol("NotExists");
 
+/**
+ * Shallow-clone a plain object so a subsequent `set(clone, key, value)` call
+ * does not mutate the caller's original object. Non-object items are returned
+ * as-is (primitives are immutable; arrays/class instances are passed through).
+ */
+const cloneForSet = <T>(item: T): T => {
+  if (item !== null && typeof item === "object" && !Array.isArray(item)) {
+    return { ...(item as any) } as T;
+  }
+  return item;
+};
+
 const getItemValue = (item: any, key: string, defaultValue?: any) => {
   if (typeof item?.get === "function") {
     return item.get(key) ?? defaultValue;
+  }
+
+  // For plain objects with a non-dotted top-level key, distinguish
+  // "key missing" from "key holds undefined" via a direct own-property check.
+  // This lets where(key, "is undefined") match items whose key is explicitly
+  // undefined, while where(key, "not exists") still matches truly-missing keys.
+  if (
+    item !== null &&
+    typeof item === "object" &&
+    typeof key === "string" &&
+    !key.includes(".") &&
+    Object.prototype.hasOwnProperty.call(item, key)
+  ) {
+    return (item as any)[key];
   }
 
   return get(item, key, defaultValue);
@@ -137,14 +160,44 @@ export class ImmutableCollection<ItemType = any> {
    * Get min value of current items or the given key
    */
   public min(key?: string): number {
-    return min(this.items, key);
+    // Empty arrays preserve the reinforcements' seed-0 convention (return 0).
+    if (this.items.length === 0) return 0;
+
+    // For non-empty arrays, compute the true minimum rather than seeding at 0,
+    // so collections of all-positive numbers don't incorrectly return 0.
+    let result = Infinity;
+    let found = false;
+    for (let i = 0; i < this.items.length; i++) {
+      const raw: any = this.items[i];
+      const value = key ? Number(getItemValue(raw, key)) : Number(raw);
+      if (Number.isNaN(value)) continue;
+      if (value < result) result = value;
+      found = true;
+    }
+
+    return found ? result : 0;
   }
 
   /**
    * Get max value of current items or the given key
    */
   public max(key?: string): number {
-    return max(this.items, key);
+    // Empty arrays preserve the reinforcements' seed-0 convention (return 0).
+    if (this.items.length === 0) return 0;
+
+    // For non-empty arrays, compute the true maximum rather than seeding at 0,
+    // so collections of all-negative numbers don't incorrectly return 0.
+    let result = -Infinity;
+    let found = false;
+    for (let i = 0; i < this.items.length; i++) {
+      const raw: any = this.items[i];
+      const value = key ? Number(getItemValue(raw, key)) : Number(raw);
+      if (Number.isNaN(value)) continue;
+      if (value > result) result = value;
+      found = true;
+    }
+
+    return found ? result : 0;
   }
 
   /**
@@ -189,7 +242,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, getItemValue(item, key) + amount);
+        return set(cloneForSet(item) as any, key, getItemValue(item, key) + amount);
       }
 
       return item + amount;
@@ -217,7 +270,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, getItemValue(item, key) - amount);
+        return set(cloneForSet(item) as any, key, getItemValue(item, key) - amount);
       }
 
       return Number(item) - amount;
@@ -245,7 +298,11 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, Number(getItemValue(item, key)) * amount);
+        return set(
+          cloneForSet(item) as any,
+          key,
+          Number(getItemValue(item, key)) * amount,
+        );
       }
 
       return Number(item) * amount;
@@ -278,7 +335,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, getItemValue(item, key) / amount);
+        return set(cloneForSet(item) as any, key, getItemValue(item, key) / amount);
       }
 
       return Number(item) / amount;
@@ -311,7 +368,7 @@ export class ImmutableCollection<ItemType = any> {
 
     return this.map(item => {
       if (key) {
-        return set(item as any, key, getItemValue(item, key) % amount);
+        return set(cloneForSet(item) as any, key, getItemValue(item, key) % amount);
       }
 
       return Number(item) % amount;
@@ -344,7 +401,7 @@ export class ImmutableCollection<ItemType = any> {
   public appendString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item as any, key, getItemValue(item, key) + string);
+        return set(cloneForSet(item) as any, key, getItemValue(item, key) + string);
       }
 
       return item + string;
@@ -357,7 +414,7 @@ export class ImmutableCollection<ItemType = any> {
   public prependString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item as any, key, string + getItemValue(item, key));
+        return set(cloneForSet(item) as any, key, string + getItemValue(item, key));
       }
 
       return string + item;
@@ -370,7 +427,11 @@ export class ImmutableCollection<ItemType = any> {
   public concatString(string: string, key?: string) {
     return this.map(item => {
       if (key) {
-        return set(item as any, key, getItemValue(item, key).concat(string));
+        return set(
+          cloneForSet(item) as any,
+          key,
+          getItemValue(item, key).concat(string),
+        );
       }
 
       return String(item).concat(string);
@@ -388,7 +449,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.map(item => {
       if (key) {
         return set(
-          item as any,
+          cloneForSet(item) as any,
           key,
           getItemValue(item, key).replace(string, replacement),
         );
@@ -405,7 +466,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.map(item => {
       if (key) {
         return set(
-          item as any,
+          cloneForSet(item) as any,
           key,
           getItemValue(item, key).replace(new RegExp(string, "g"), replacement),
         );
@@ -422,7 +483,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.map(item => {
       if (key) {
         return set(
-          item as any,
+          cloneForSet(item) as any,
           key,
           getItemValue(item, key).replace(string, ""),
         );
@@ -439,7 +500,7 @@ export class ImmutableCollection<ItemType = any> {
     return this.map(item => {
       if (key) {
         return set(
-          item as any,
+          cloneForSet(item) as any,
           key,
           getItemValue(item, key).replace(new RegExp(string, "g"), ""),
         );
@@ -478,7 +539,9 @@ export class ImmutableCollection<ItemType = any> {
     ) => Acc,
     initialValue?: Acc,
   ) {
-    return this.items.reduce<Acc>(callback, initialValue as Acc);
+    return arguments.length === 1
+      ? (this.items.reduce(callback as any) as Acc)
+      : this.items.reduce<Acc>(callback, initialValue as Acc);
   }
 
   /**
@@ -545,10 +608,11 @@ export class ImmutableCollection<ItemType = any> {
   }
 
   /**
-   * Remove and return the first item in the array
+   * Remove and return the first item in the array.
+   * Returns the first item without mutating the underlying array.
    */
   public shift() {
-    return this.items.shift();
+    return this.items[0];
   }
 
   /**
@@ -571,9 +635,14 @@ export class ImmutableCollection<ItemType = any> {
    * Prepend unique values to the array
    */
   public prependUnique(...items: any[]) {
-    const currentItems = [...this.items];
-    unshiftUnique(currentItems, ...items);
-    return new ImmutableCollection<ItemType>(currentItems);
+    // Filter out items that already exist, then prepend them in argument order.
+    // (reinforcements' unshiftUnique unshifts one-by-one which reverses the
+    // input order — fixed here at the collection level.)
+    const newItems = items.filter(item => !this.items.includes(item));
+    return new ImmutableCollection<ItemType>([
+      ...newItems,
+      ...this.items,
+    ] as ItemType[]);
   }
 
   /**
@@ -609,10 +678,11 @@ export class ImmutableCollection<ItemType = any> {
   }
 
   /**
-   * Remove and return the last item in the array
+   * Remove and return the last item in the array.
+   * Returns the last item without mutating the underlying array.
    */
   public pop() {
-    return this.items.pop();
+    return this.items[this.items.length - 1];
   }
 
   /**
@@ -849,7 +919,7 @@ export class ImmutableCollection<ItemType = any> {
    * Sort the collection based on the given callback
    */
   public sort(callback?: Parameters<typeof Array.prototype.sort>[0]) {
-    return new ImmutableCollection<ItemType>(this.items.sort(callback));
+    return new ImmutableCollection<ItemType>([...this.items].sort(callback));
   }
 
   /**
@@ -920,22 +990,23 @@ export class ImmutableCollection<ItemType = any> {
    * Sort order by the given key in descending order
    */
   public sortByDesc(key: string) {
-    return new ImmutableCollection<ItemType>(
-      this.items.sort((a: any, b: any) => {
-        const aValue: any = getItemValue(a, key);
-        const bValue: any = getItemValue(b, key);
+    const items = [...this.items];
+    items.sort((a: any, b: any) => {
+      const aValue: any = getItemValue(a, key);
+      const bValue: any = getItemValue(b, key);
 
-        if (aValue < bValue) {
-          return 1;
-        }
+      if (aValue < bValue) {
+        return 1;
+      }
 
-        if (aValue > bValue) {
-          return -1;
-        }
+      if (aValue > bValue) {
+        return -1;
+      }
 
-        return 0;
-      }),
-    );
+      return 0;
+    });
+
+    return new ImmutableCollection<ItemType>(items);
   }
 
   /**
@@ -1086,7 +1157,7 @@ export class ImmutableCollection<ItemType = any> {
    * Reverse collection items
    */
   public reverse() {
-    return new ImmutableCollection<ItemType>(this.items.reverse());
+    return new ImmutableCollection<ItemType>([...this.items].reverse());
   }
 
   /**
@@ -1395,6 +1466,8 @@ export class ImmutableCollection<ItemType = any> {
     if (args.length === 2) {
       if (Operators.includes(args[0])) {
         isPrimitive = true;
+        operator = args[0];
+        value = args[1];
       } else if (!Operators.includes(args[1])) {
         value = operator;
 
@@ -1898,9 +1971,10 @@ export class ImmutableCollection<ItemType = any> {
   public trim(value = " ", key?: string) {
     return this.map(item => {
       if (key) {
-        set(item as any, key, trim(String(getItemValue(item, key)), value));
+        const cloned = cloneForSet(item);
+        set(cloned as any, key, trim(String(getItemValue(item, key)), value));
 
-        return item;
+        return cloned;
       }
 
       return trim(String(item), value);

@@ -1,0 +1,367 @@
+# @mongez/collection — full reference
+
+> A chainable, immutable-by-default array wrapper. This is the concatenated reference; load `llms.txt` for the structured index.
+
+## Install
+
+```sh
+yarn add @mongez/collection
+# deps: @mongez/reinforcements, @mongez/supportive-is
+```
+
+## Public exports
+
+```ts
+import {
+  collect,
+  ImmutableCollection,
+  Operators,
+  type ComparisonOperator,
+  type GenericObject,
+} from "@mongez/collection";
+```
+
+## collect / ImmutableCollection
+
+```ts
+collect<T>(items?: T[] | ImmutableCollection<T>): ImmutableCollection<T>
+
+new ImmutableCollection<T>(items?: T[] | ImmutableCollection<T>)
+
+ImmutableCollection.fromIterator<T>(iterable: Iterable<any>): ImmutableCollection<T>
+ImmutableCollection.create<T>(length: number, initialValue?: T | ((i: number) => T)): ImmutableCollection<T>
+
+collect.fromIterator = ImmutableCollection.fromIterator
+collect.create       = ImmutableCollection.create
+```
+
+The constructor clones the input array. Passing anything other than an array or another collection throws `Invalid items type`.
+
+## Mutation reference (read this first)
+
+Despite the "Immutable" prefix, four methods mutate the underlying array:
+
+| Method | Behavior |
+|---|---|
+| `sort(cb?)` | Calls `Array.prototype.sort` on `this.items` directly. Source is reordered. |
+| `reverse()` / `flip()` | Calls `Array.prototype.reverse` on `this.items`. Source is reversed. |
+| `sortByDesc(key)` | Comparator-based but operates on `this.items` (no clone). |
+| `shift()` | Returns the removed first item; mutates source. |
+| `pop()` | Returns the removed last item; mutates source. |
+
+Workaround: `c.clone().sort(...)` or `c.clone().reverse()`.
+
+Everything else returns a new collection.
+
+## Array-builtin parity
+
+```ts
+// Transforms (return new collection)
+c.map<U>(cb): ImmutableCollection<U>
+c.filter(cb): ImmutableCollection<T>
+c.takeWhile(cb): ImmutableCollection<T>          // alias for filter (kept-items)
+c.removeAll(cb): ImmutableCollection<T>          // alias for filter (kept-items; confusing name)
+c.flat(depth?: number): ImmutableCollection<any>
+c.flatMap(cb): ImmutableCollection<any>
+
+// Reads (return scalar)
+c.reduce<Acc>(cb, initialValue?): Acc
+c.reduceRight(cb, initialValue?): any
+c.find(cb): T | undefined
+c.findIndex(cb): number
+c.indexOf(item, fromIndex?): number
+c.lastIndexOf(item, fromIndex?): number
+c.includes(item): boolean
+c.contains(item): boolean                        // alias
+c.has(cb): boolean                               // findIndex !== -1
+c.every(cb): boolean
+c.some(cb): boolean
+c.join(separator?): string
+c.implode(separator?): string                    // alias
+
+// Iteration / shape
+c.forEach(cb): this
+c.each(cb): this                                 // alias
+c.tap(cb: (c) => any): this                      // side-effect, returns self
+c.keys(): ImmutableCollection<number>
+c.values(): ImmutableCollection<T>
+c.entries(): ImmutableCollection<[number, T]>
+c.indexes(): ImmutableCollection<number>         // same as keys
+c.length: number                                 // getter (not a method)
+c[Symbol.iterator](): Iterator<T>
+
+// Conversion
+c.toArray(map?): T[]                             // returns live reference
+c.all(): T[]                                     // alias for toArray()
+c.toString(): string
+c.toJson(): string
+```
+
+> **Known issue**: `c.reduce(cb)` (no initialValue) passes `undefined` through to `Array.prototype.reduce` instead of omitting the arg, producing `NaN` for numeric arrays. Always provide an initial value.
+
+## Insert / remove
+
+```ts
+// Insert (returns new)
+c.push(...items): ImmutableCollection<T>
+c.append(...items): ImmutableCollection<T>       // alias
+c.pushUnique(...items): ImmutableCollection<T>
+c.unshift(...items): ImmutableCollection<T>
+c.prepend(...items): ImmutableCollection<T>      // alias for unshift
+c.prependUnique(...items): ImmutableCollection<T>
+c.unshiftUnique(...items): ImmutableCollection<T> // alias for prependUnique
+
+// Quirk: `prependUnique(a, b, c)` unshifts items one-by-one, so the
+// final ordering is the REVERSE of the argument list (each new item
+// goes to position 0).
+
+// Remove (returns new)
+c.delete(index): ImmutableCollection<T>
+c.unset(...indexes): ImmutableCollection<T>
+c.remove(value): ImmutableCollection<T>          // drops first strict-equal match; no-op if not found
+
+// Remove (MUTATES + returns the removed item)
+c.shift(): T | undefined
+c.pop(): T | undefined
+
+// Replace (returns new)
+c.set(index, value): ImmutableCollection<T>
+c.update(index, value): ImmutableCollection<T>   // alias for set
+c.replace(oldValue, newValue): ImmutableCollection<T>     // first occurrence
+c.replaceAll(oldValue, newValue): ImmutableCollection<T>  // every occurrence
+
+// Reorder (returns new)
+c.swap(i, j): ImmutableCollection<T>
+c.move(from, to): ImmutableCollection<T>
+c.reorder({ [oldIndex]: newIndex }): ImmutableCollection<T>
+```
+
+## Merge
+
+```ts
+c.merge(...arrays): ImmutableCollection<T>       // concat with given arrays
+c.concat(...arrays): ImmutableCollection<T>      // alias
+```
+
+## Reads
+
+```ts
+c.first(): T | undefined
+c.last(): T | undefined
+c.end(): T | undefined                           // alias for last
+
+c.at(i): T | undefined
+c.index(i): T | undefined                        // alias for at
+
+c.get(path): any                                 // dot-notation read on items
+c.value(key, default?): any                      // first item's value for that key
+c.valueAt(index, key, default?): any             // one item's value for a key
+c.lastValue(key, default?): any                  // last item's value for that key
+
+c.getByIndexes(...indexes): ImmutableCollection<T>
+c.exceptIndexes(...indexes): ImmutableCollection<T>
+
+c.equals(other: T[] | ImmutableCollection<T>): boolean   // deep equality
+c.isEmpty(): boolean
+c.isNotEmpty(): boolean
+c.lastIndex(): number                            // length - 1
+```
+
+## where(...) — operator filtering
+
+Three overloads:
+
+```ts
+c.where(key, value): ImmutableCollection<T>                       // equality
+c.where(key, operator, value): ImmutableCollection<T>             // any operator
+c.where(operator, value): ImmutableCollection<T>                  // primitive-mode (currently broken)
+```
+
+Operators (50+):
+
+- Equality: `=` / `equals`, `!=` / `not` / `not equals`
+- Comparison: `>` / `gt`, `>=` / `gte`, `<` / `lt`, `<=` / `lte`
+- Substring (case-insensitive): `like` / `%`, `not like` / `!%`
+- Regex: `regex` (or pass a `RegExp` value with no operator)
+- Set membership: `in`, `not in` / `!in`
+- Range (inclusive): `between` / `<>`, `not between` / `!between` / `!<>`
+- Substring (`.includes`): `contains`, `not contains` / `!contains`
+- Boundary: `starts with`, `not starts with` / `!starts with`, `ends with`, `not ends with` / `!ends with`
+- Null: `null` / `is null`, `is not null` / `!null`
+- Undefined: `undefined` / `is undefined`, `is not undefined` / `!undefined`
+- Existence: `exists`, `not exists` / `!exists`
+- Boolean: `true` / `is true`, `is not true` / `!true`, `false` / `is false`, `is not false` / `!false`
+- typeof: `is` / `typeof`, `is not` / `!is` / `not typeof`
+- instanceof: `instanceof` / `is a`, `not instanceof` / `!instanceof` / `is not a` / `!is a`
+- Empty: `empty` / `is empty`, `not empty` / `is not empty` / `!empty`
+
+`firstWhere(...)`, `lastWhere(...)` are `c.where(...).first()` / `c.where(...).last()` shortcuts.
+
+Dedicated shorthands:
+
+```ts
+c.whereIn(values | key, values): ImmutableCollection<T>
+c.whereNot(value | key, value): ImmutableCollection<T>
+c.whereBetween(values | key, values): ImmutableCollection<T>
+c.whereNotBetween(values | key, values): ImmutableCollection<T>
+c.whereEmpty(key?): ImmutableCollection<T>
+c.whereNotEmpty(key?): ImmutableCollection<T>
+c.heavy(key?): ImmutableCollection<T>                            // alias for whereNotEmpty
+c.whereNull(key?): ImmutableCollection<T>
+c.whereNotNull(key?): ImmutableCollection<T>
+c.whereUndefined(key?): ImmutableCollection<T>
+c.whereNotUndefined(key?): ImmutableCollection<T>
+c.whereExists(key): ImmutableCollection<T>
+c.whereNotExists(key): ImmutableCollection<T>
+```
+
+Inverse:
+
+```ts
+c.reject(cb): ImmutableCollection<T>             // !cb
+c.except(cb): ImmutableCollection<T>             // alias for reject
+c.skipWhile(cb): ImmutableCollection<T>          // alias for reject
+c.not(value): ImmutableCollection<T>             // !== value
+c.rejectFirst(cb) / exceptFirst(cb): ImmutableCollection<T>   // drop first match only
+c.rejectLast(cb) / exceptLast(cb): ImmutableCollection<T>     // drop last match only
+```
+
+### Known where(...) bugs
+
+- `where(operator, value)` primitive mode doesn't rotate args; treat `(">", 2)` as broken, use `.filter` directly.
+- `where(key, "is undefined")` does not match items whose key is explicitly `undefined`. Use `where(key, "not exists")`.
+
+## Math
+
+```ts
+c.min(key?): number                              // 0 for empty array (reinforcements quirk)
+c.max(key?): number                              // 0 for empty array
+c.sum(key?): number                              // 0 for empty array
+c.average(key?): number                          // NaN for empty array
+c.avg(key?): number                              // alias for average
+c.median(key?): number
+
+c.plus(amount): ImmutableCollection<T>
+c.plus(key, amount): ImmutableCollection<T>      // mutates source items via reinforcements `set`
+c.minus(amount | key, amount): ImmutableCollection<T>
+c.multiply(amount | key, amount): ImmutableCollection<T>
+c.divide(amount | key, amount): ImmutableCollection<T>          // throws on 0 divisor
+c.modulus(amount | key, amount): ImmutableCollection<T>         // throws on 0 divisor
+
+c.increment(key?): ImmutableCollection<T>        // +1
+c.decrement(key?): ImmutableCollection<T>        // -1
+c.double(key?): ImmutableCollection<T>           // *2
+c.half(key?): ImmutableCollection<T>             // /2
+
+c.even(key?): ImmutableCollection<T>             // values whose key/item is even
+c.odd(key?): ImmutableCollection<T>
+c.evenIndexes(): ImmutableCollection<T>          // items at positions 0, 2, 4, ...
+c.oddIndexes(): ImmutableCollection<T>           // items at positions 1, 3, 5, ...
+
+c.count(keyOrCb): number
+c.countValue(value): number
+c.countBy(key): Record<string, number>
+```
+
+## Strings
+
+```ts
+// All keyed forms mutate the source items via reinforcements `set`.
+c.appendString(s, key?): ImmutableCollection<T>
+c.prependString(s, key?): ImmutableCollection<T>
+c.concatString(s, key?): ImmutableCollection<T>           // identical to appendString for strings
+c.replaceString(search: string | RegExp, repl: string, key?): ImmutableCollection<T>
+c.replaceAllString(search: string, repl: string, key?): ImmutableCollection<T>  // search is always promoted to global regex
+c.removeString(search: string | RegExp, key?): ImmutableCollection<T>
+c.removeAllString(search: string, key?): ImmutableCollection<T>
+c.trim(chars?: string, key?): ImmutableCollection<T>     // default chars = " "
+
+// Casting
+c.string(): ImmutableCollection<string>
+c.number(): ImmutableCollection<number>
+c.boolean(): ImmutableCollection<boolean>
+```
+
+## Pagination / slice / chunk
+
+```ts
+c.take(n) / limit(n): ImmutableCollection<T>
+c.takeLast(n): ImmutableCollection<T>
+c.takeUntil(cb): ImmutableCollection<T>          // up to (exclusive) the first match
+c.takeWhile(cb): ImmutableCollection<T>          // alias for filter — keeps every match
+
+c.skip(n) / skipTo(n): ImmutableCollection<T>
+c.skipLast(n): ImmutableCollection<T>
+c.skipUntil(cb): ImmutableCollection<T>          // from (inclusive) the first match
+c.skipLastUntil(cb): ImmutableCollection<T>      // keep up to (exclusive) the first match
+c.skipLastWhile(cb): ImmutableCollection<T>      // drop a trailing run of matches
+c.skipWhile(cb): ImmutableCollection<T>          // alias for reject
+
+c.slice(start?, end?): ImmutableCollection<T>           // non-mutating
+c.splice(start, deleteCount?, ...inserts): ImmutableCollection<T>  // non-mutating
+
+c.chunk(size, returnAsCollection?: boolean = true): ImmutableCollection<ImmutableCollection<T> | T[]>
+
+c.random(): T                                    // single random item
+c.random(n): ImmutableCollection<T>              // n random items
+c.shuffle(): ImmutableCollection<T>
+```
+
+## Sort / group / partition / unique
+
+```ts
+c.sort(cb?): ImmutableCollection<T>              // MUTATES — clone first
+c.sortBy(key: string): ImmutableCollection<T>    // safe (clones)
+c.sortBy({ [key]: "asc" | "desc" }): ImmutableCollection<T>
+c.sortByDesc(key: string): ImmutableCollection<T>     // MUTATES
+
+c.reverse() / flip(): ImmutableCollection<T>     // MUTATES
+
+c.groupBy(key | keys): ImmutableCollection<{ [key]: any; items: T[] }>
+c.partition(cb): [ImmutableCollection<T>, ImmutableCollection<T>]
+
+c.unique(key?): ImmutableCollection                // values, when key given (not deduped objects)
+c.uniqueList(key): ImmutableCollection<T>          // first object per unique key value
+```
+
+## Projection
+
+```ts
+c.pluck(key | keys): ImmutableCollection
+c.select(...keys): ImmutableCollection<Partial<T>>
+c.collectFrom(key): ImmutableCollection            // flatten one level when key holds arrays
+c.collectFromKey(index, key): ImmutableCollection
+c.collectFromKey("index.key"): ImmutableCollection
+```
+
+## Clone
+
+```ts
+c.clone(): ImmutableCollection<T>
+c.copy(): ImmutableCollection<T>                 // alias for clone
+```
+
+## Iteration
+
+```ts
+for (const item of c) { ... }
+[...c]
+Array.from(c)
+```
+
+## Why this package vs `@mongez/reinforcements`' array helpers
+
+Both can do the same things; pick by ergonomics:
+
+- One operation on an array → reinforcements (lighter, tree-shakeable).
+- Multi-step pipeline → collection (fluent chain).
+- `where(...)` operator filtering → collection (no equivalent in reinforcements).
+
+Collection delegates to reinforcements for many primitives (`min`, `max`, `sum`, `unique`, `pluck`, `groupBy`, `chunk`, `countBy`, `even`, `odd`, `shuffle`, `pushUnique`, `unshiftUnique`).
+
+## What this package does NOT do
+
+- React hooks / signals / atoms. Use [`@mongez/atom`](https://github.com/hassanzohdy/mongez-atom) — `atomCollection` is the equivalent for reactive arrays.
+- Real immutability with structural sharing.
+- Async iteration. All operations are synchronous and walk the array eagerly.
+- Type predicates (use `@mongez/supportive-is`).

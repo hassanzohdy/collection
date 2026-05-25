@@ -1,0 +1,39 @@
+# @mongez/collection
+
+> A chainable, immutable-by-default array wrapper. ~100 helpers — `where(...)`, `groupBy`, `sortBy`, `partition`, `chunk`, `pluck`, math/string transforms — over a single shared array reference, callable in a fluent pipeline. Despite the name, four methods leak in-place mutation (`sort`, `reverse`, `shift`, `pop`); see Mutation.
+
+The factory is `collect(items)`. The class is `ImmutableCollection<T>`. Both ship from the package root.
+
+## Docs
+
+- [Overview](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/overview.md): Pitch, install, mental model, scope boundary vs `@mongez/reinforcements`' array helpers.
+- [README](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/README.md): Marketing-style index.
+- [Changelog](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/CHANGELOG.md): Release notes.
+
+## Reference (by namespace)
+
+- [Construction](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/construction.md): `collect`, `ImmutableCollection`, static `fromIterator`, `create`. Constructor clones input; iterable-yielding.
+- [Array-builtins](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/builtins.md): `map`, `filter`, `reduce`, `forEach`, `flat`, `flatMap`, `find`, `every`, `some`, `join`, `keys`/`values`/`entries`. All delegate to `Array.prototype`.
+- [Mutation reference](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/mutation.md): The full table of "returns new" vs "mutates" for every method. THE most important file in this package.
+- [where(...)](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/where.md): All 50+ operators (`=`, `>`, `like`, `between`, `in`, `is`, `exists`, `empty`, `null`, `regex`, ...) and shorthand helpers (`whereIn`, `whereBetween`, `whereNotNull`, ...). Plus `firstWhere` / `lastWhere`.
+- [Math](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/math.md): `min`, `max`, `sum`, `average`, `median`, `plus`, `minus`, `multiply`, `divide`, `modulus`, `increment`, `decrement`, `even`, `odd`, `count`, `countBy`. Notes on `min`/`max`-of-empty returning 0.
+- [Strings](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/strings.md): `appendString`, `prependString`, `replaceString`, `replaceAllString`, `removeString`, `trim`, casting (`string`, `number`, `boolean`).
+- [Pagination & slicing](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/pagination.md): `take`, `limit`, `takeLast`, `takeUntil`, `skip`, `skipLast`, `slice`, `splice`, `chunk`, `random`, `shuffle`.
+- [Sort / group / partition / unique](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/sort-group.md): `sort`, `sortBy`, `sortByDesc`, `groupBy`, `partition`, `unique`, `uniqueList`, reorder helpers (`swap`, `move`, `reorder`).
+- [Recipes](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/skills/recipes.md): Top-N, paginate, partition+pipeline, dedupe-and-project, safe sort, batched processing.
+
+## Quick rules
+
+1. **Import from the package root**: `import { collect, ImmutableCollection } from "@mongez/collection"`.
+2. **`collect(items)` is the factory**. Returns `ImmutableCollection<T>`.
+3. **Default behavior is "returns a new collection"** — `map`, `filter`, `where`, `push`, `unshift`, `delete`, `set`, `replace`, `slice`, `splice`, `merge`, `concat`, `sortBy`, `groupBy`, etc.
+4. **MUTATING methods**: `sort()`, `reverse()` (alias `flip`), `sortByDesc(key)`, `shift()`, `pop()`. Use `.clone()` first if you need to keep the original.
+5. **`where(...)`** has three overloads: `(key, value)`, `(key, operator, value)`, and a primitive-mode `(operator, value)` (the third is currently broken — see Mutation/where notes).
+6. **Dot-notation paths** work in every method that takes a `key` (`"total.price"`, `"0.name"`).
+7. **Items with a `.get(key)` method** override the dot-notation lookup — useful for model classes.
+8. **`length` is a getter** (`c.length`), not a function.
+
+## Optional
+
+- [Full single-file reference (llms-full.txt)](https://raw.githubusercontent.com/hassanzohdy/reinforcements/main/llms-full.txt): All reference content concatenated.
+- [Source repository](https://github.com/hassanzohdy/reinforcements): The collection ships from the `reinforcements` monorepo.
