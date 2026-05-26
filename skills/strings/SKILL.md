@@ -15,7 +15,7 @@ c.transform(value)              // applied to each item (as a string)
 c.transform(value, key)         // applied to each item's keyed value
 ```
 
-All return a new collection. The keyed form **mutates the source items** via reinforcements' `set` (same hazard as in math operations).
+All return a new collection. The keyed form shallow-clones each plain-object item via `cloneForSet` before applying the change, so the source items are not modified. (Class instances and nested object references are passed through; the clone is shallow.)
 
 ## Append / prepend / concat
 

@@ -27,10 +27,9 @@ collect([{ price: 10 }, { price: 20 }]).sum("price");    // 30
 collect([{ total: { price: 10 } }]).sum("total.price");  // 10 — dot notation
 ```
 
-### Reinforcements' quirks
+### Edge cases
 
-- `min` / `max` on an empty collection return **`0`**, not `Infinity` / `-Infinity` or `undefined`. (See [`reinforcements min.ts` on GitHub](https://github.com/hassanzohdy/reinforcements/blob/main/src/array/min.ts) — the seed value is `0`.)
-- `min` of an all-positive array whose true min is > 0 also returns `0`, because the implementation only updates when `minValue === 0 || value < minValue`. Pinned as a skipped test.
+- `min` / `max` on an **empty** collection return `0` (preserving the legacy reinforcements convention). On a non-empty collection the wrapper computes the true minimum/maximum directly — collections of all-positive numbers return their actual min, not `0`.
 - `average` of an empty collection is `NaN` (`0 / 0`).
 - `NaN` values are skipped silently in `min`, `max`, `sum`, `average`, `median`.
 
@@ -58,17 +57,17 @@ collect([{ age: 20 }, { age: 30 }]).plus("age", 1);
 //  [{ age: 21 }, { age: 31 }]
 ```
 
-### Gotcha — mutation of input objects
+### Keyed forms — safe by default for plain objects
 
-The keyed forms (`plus("key", amount)`, `minus("key", ...)`, etc.) use `set(item, key, ...)` from reinforcements, which **mutates the source object**. So:
+The keyed forms (`plus("key", amount)`, `minus("key", ...)`, etc.) shallow-clone each plain-object item via an internal `cloneForSet` helper before calling `set(clone, key, value)`. The source objects are **not** mutated:
 
 ```ts
 const src = [{ age: 20 }];
 collect(src).plus("age", 1);
-src;  // [{ age: 21 }]  — the original was mutated
+src;  // [{ age: 20 }]  — original is untouched
 ```
 
-If you need to keep the input immutable, clone it before wrapping: `collect(src.map(o => ({...o})))`.
+Class instances and nested object references are still passed through by reference (the clone is shallow). If you need deep immutability for nested structures, clone the input deeply before wrapping.
 
 ### Division / modulus by zero
 

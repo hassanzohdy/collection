@@ -117,6 +117,6 @@ collect(["a","b","c","d"]).oddIndexes();  // ["b","d"] (indexes 1, 3)
 
 - `min` / `max` on an **empty** collection return `0` (matching `@mongez/reinforcements` convention). On a **non-empty** collection they find the true minimum/maximum, so a collection of all-positive numbers will not incorrectly return `0` for `max`.
 - `sum`, `average`, and `median` delegate directly to `@mongez/reinforcements`' helpers.
-- **Keyed arithmetic mutates item objects.** `plus("age", 5)` shallow-clones plain objects via `cloneForSet` before calling `set(clone, key, value)`, so the original plain-object items in the source collection are safe. However, if items are class instances or have nested object references, those nested references are shared — clone the collection first if deep immutability is required.
+- **Keyed arithmetic does not mutate plain-object items.** `plus("age", 5)` shallow-clones each plain-object item via `cloneForSet` before calling `set(clone, key, value)`, so the originals in the source collection are safe. Class instances and nested object references are still passed through by reference (the clone is shallow) — deep-clone the input first if deep immutability is required.
 - `divide` and `modulus` throw `Error("Cannot divide by zero")` when the divisor is `0`.
 - All per-item math methods return a new collection — they do not mutate `this.items`.

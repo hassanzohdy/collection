@@ -8,17 +8,17 @@ description: |
 
 # Mutation reference
 
-**The most important file in this package's docs.** Despite the name `ImmutableCollection`, four methods MUTATE the underlying array. If you don't know which ones, you'll write subtle bugs.
+**The reference for which methods are safe to call on a shared collection.** `ImmutableCollection` is non-mutating: every reshape returns a NEW collection and leaves the source untouched. The remaining footgun is `toArray()` / `all()`, which return the live underlying array reference.
 
 ## TL;DR
 
-- Most operations (`map`, `filter`, `push`, `unshift`, `set`, `replace`, `delete`, `unset`, `merge`, `concat`, `slice`, `splice`, `sortBy`, `move`, `swap`, `reorder`, ...) return a NEW collection.
-- **`sort()`, `reverse()` (alias `flip`), `shift()`, `pop()` mutate**. `sortByDesc(key)` also mutates (the per-key `sortBy` clones first, but `sortByDesc` doesn't).
-- If you need to keep the original, call `.clone()` first, then apply the mutating method.
+- Every reshape (`map`, `filter`, `push`, `unshift`, `set`, `replace`, `delete`, `unset`, `merge`, `concat`, `slice`, `splice`, `sort`, `sortBy`, `sortByDesc`, `reverse`, `flip`, `move`, `swap`, `reorder`, ...) returns a NEW collection. The originals are untouched.
+- `shift()` and `pop()` return the first/last ITEM but do NOT remove it — they are non-destructive reads (use `skip(1)` / `skipLast(1)` if you also need to drop the item from a downstream collection).
+- `toArray()` / `all()` return the LIVE array reference; mutating the returned array mutates the collection. Use `[...c]` or `Array.from(c)` for a defensive copy.
 
 ## Method matrix
 
-### Always returns a NEW collection
+### Always returns a NEW collection (source untouched)
 
 | Group | Methods |
 |---|---|
@@ -27,21 +27,20 @@ description: |
 | Replace at index | `set`, `update`, `replace`, `replaceAll`, `swap`, `move`, `reorder` |
 | Remove | `delete`, `unset`, `remove`, `whereNot`, `whereNotEmpty`, etc. (all `where*` variants) |
 | Subset | `take`, `limit`, `takeLast`, `takeUntil`, `skip`, `skipTo`, `skipLast`, `skipUntil`, `skipLastUntil`, `skipLastWhile`, `slice`, `splice`, `chunk` |
-| Reshape | `sortBy(key)`, `sortBy({...})`, `groupBy`, `partition` (returns `[matches, rest]`), `unique`, `uniqueList`, `pluck`, `select`, `collectFrom`, `collectFromKey` |
+| Reshape | `sort`, `sortBy(key)`, `sortBy({...})`, `sortByDesc(key)`, `reverse`, `flip`, `groupBy`, `partition` (returns `[matches, rest]`), `unique`, `uniqueList`, `pluck`, `select`, `collectFrom`, `collectFromKey` |
 | Math/strings/cast | `plus`, `minus`, `multiply`, `divide`, `modulus`, `increment`, `decrement`, `double`, `half`, `even`, `odd`, `evenIndexes`, `oddIndexes`, `appendString`, `prependString`, `concatString`, `replaceString`, `replaceAllString`, `removeString`, `removeAllString`, `trim`, `string`, `number`, `boolean` |
 | Merge | `merge`, `concat` |
 | Clone | `clone`, `copy` |
 | Index reads | `getByIndexes`, `exceptIndexes`, `keys`, `values`, `entries`, `indexes` |
 
-### MUTATES the underlying array
+> `sort`, `reverse`/`flip`, and `sortByDesc` all clone `this.items` internally before delegating to `Array.prototype.sort`/`reverse`, so the source array is never reordered. Earlier versions of this package mutated in place; that was fixed (see `CHANGELOG.md` → "Unreleased").
 
-| Method | What happens | Workaround |
+### Returns a single item without removing it
+
+| Method | Returns | Notes |
 |---|---|---|
-| `sort()` | Delegates to `Array.prototype.sort` on `this.items` directly. The source is reordered in place AND the returned collection wraps the same now-sorted array. | `c.clone().sort()` |
-| `reverse()` / `flip()` | Same as `sort` — uses `Array.prototype.reverse`. | `c.clone().reverse()` |
-| `sortByDesc(key)` | Comparator-based, but called on `this.items` (no `[...this.items]` clone). | `c.clone().sortByDesc(...)` |
-| `shift()` | Pops the first item and returns it. Returns the ITEM (not a collection). | `c.skip(1)` for non-destructive variant |
-| `pop()` | Pops the last item and returns it. Returns the ITEM (not a collection). | `c.skipLast(1)` for non-destructive variant |
+| `shift()` | First item (or `undefined`) | Despite the name, does NOT remove. Use `c.skip(1)` if you also want the rest. |
+| `pop()` | Last item (or `undefined`) | Despite the name, does NOT remove. Use `c.skipLast(1)` if you also want the rest. |
 
 ### Reads/inspects (no mutation, returns a non-collection value)
 
@@ -68,13 +67,11 @@ description: |
 
 ## Why the "Immutable" name
 
-The constructor takes a defensive copy of the input. Most operations build a fresh array. But the four hot-path mutators (`sort`, `reverse`, `shift`, `pop`) call the underlying `Array.prototype` methods directly on `this.items` — and those methods mutate-and-return-same-reference. The wrapper does not work around this, so the source array is reordered.
+The constructor takes a defensive copy of the input, and every reshape — including `sort`, `reverse`/`flip`, and `sortByDesc` — clones `this.items` before delegating to the native `Array.prototype` method. The source collection is never reordered.
 
-This pre-dates the modern toolkit and is preserved for backward compatibility. The fix is straightforward (clone before delegating to the prototype method) but would be a behavior change for anyone relying on the current semantics.
+`shift()` / `pop()` deliberately do not remove the returned item, so they are also safe to call on a shared collection. If you want a queue-drain pattern, build your own loop with `skip(1)` to advance, or use a plain mutable array.
 
-If you author a pipeline, lean on `sortBy(key)` (which clones), not `sort()`. And avoid `shift()`/`pop()` when you mean "drop one and continue chaining"; use `skip(1)` / `skipLast(1)` instead.
-
-## Examples — what bites people
+## Examples
 
 ### Sharing a collection across two pipelines
 
@@ -82,35 +79,26 @@ If you author a pipeline, lean on `sortBy(key)` (which clones), not `sort()`. An
 const all = collect(users);
 
 const sortedByAge = all.sort((a, b) => a.age - b.age);
-// `all` is also now sorted-by-age. Probably not what you wanted.
-
-// FIX:
-const sortedByAge2 = all.clone().sort((a, b) => a.age - b.age);
+// `all` is still in the original order — sort() does not mutate.
 ```
-
-### Draining the queue
-
-```ts
-const queue = collect(jobs);
-
-while (queue.length > 0) {
-  const job = queue.shift();          // OK — mutating queue is intentional
-  await process(job);
-}
-```
-
-`shift()` and `pop()` are useful when you actually want to consume the collection. The hazard is using them where you expected a non-mutating "drop one" operation.
 
 ### Sorting a parameter
 
 ```ts
 function topThree(c: ImmutableCollection<User>) {
   return c.sort((a, b) => b.score - a.score).take(3);
-  //         ^^^ mutates the caller's `c`
+  //         ^^^ safe — c is not modified
 }
+```
 
-// FIX — clone at the boundary:
-function topThree(c: ImmutableCollection<User>) {
-  return c.clone().sort((a, b) => b.score - a.score).take(3);
-}
+### Live-array hazard via `toArray()` / `all()`
+
+```ts
+const c = collect([1, 2, 3]);
+const arr = c.all();
+arr.push(99);             // mutates the collection too — same reference
+c.length;                 // 4
+
+// FIX — defensive copy:
+const arr2 = [...c];      // independent
 ```

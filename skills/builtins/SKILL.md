@@ -49,12 +49,13 @@ c.implode(separator?): string       // alias
 
 ```ts
 collect([1, 2, 3, 4]).reduce((acc, n) => acc + n, 0);     // 10
+collect([1, 2, 3, 4]).reduce((acc, n) => acc + n);        // 10 — also works
 collect([1, 2, 3]).find(n => n > 1);                      // 2
 collect([1, 2, 3]).every(n => n > 0);                     // true
 collect([1, 2, 3]).join("-");                             // "1-2-3"
 ```
 
-> **Pinned hazard**: `reduce(cb)` without an `initialValue` currently produces `NaN` for numeric arrays — the wrapper passes `initialValue` even when undefined, which changes Array.prototype.reduce's semantics. Always pass an initial value (`reduce(cb, 0)`).
+`reduce(cb)` (no `initialValue`) preserves native `Array.prototype.reduce` semantics — the wrapper uses `arguments.length` to decide whether to forward `initialValue`, so `items[0]` is used as the accumulator when none is supplied. Calling `reduce` on an empty collection with no initial value still throws `TypeError`, matching the native behavior.
 
 ## Iteration / shape
 

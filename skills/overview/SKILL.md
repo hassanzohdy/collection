@@ -62,17 +62,17 @@ for (const n of c) console.log(n);
 
 ### Immutability model
 
-`ImmutableCollection` is **immutable by default**: every method that reshapes the data returns a **new** collection and leaves the original unchanged. There are exactly five exceptions that mutate the underlying array:
+`ImmutableCollection` is **immutable by default**: every method that reshapes the data returns a **new** collection and leaves the original unchanged. The two `Array.prototype`-style item readers are non-destructive:
 
-| Method | Safe alternative |
+| Method | Behavior |
 |---|---|
-| `sort(cb?)` | `c.clone().sort(...)` |
-| `reverse()` / `flip()` | `c.clone().reverse()` |
-| `sortByDesc(key)` | `c.clone().sortByDesc(key)` |
-| `shift()` | returns first item without removing; use `c.skip(1)` to drop it |
-| `pop()` | returns last item without removing; use `c.skipLast(1)` to drop it |
+| `sort(cb?)` | Clones internally; returns a new sorted collection. Original is untouched. |
+| `reverse()` / `flip()` | Clones internally; returns a new reversed collection. |
+| `sortByDesc(key)` | Clones internally; returns a new collection sorted descending. |
+| `shift()` | Returns the first item **without removing** it. Use `c.skip(1)` to drop it. |
+| `pop()` | Returns the last item **without removing** it. Use `c.skipLast(1)` to drop it. |
 
-Note: the source code shows `sort`, `reverse`, and `sortByDesc` all internally spread to a new array before sorting, so they do **not** mutate the stored items in the current implementation — but the README documents them as mutating as a safety note. Rely on `.clone()` before any of these if you need to be certain.
+The one remaining sharp edge is `toArray()` / `all()`, which return the live underlying array (see [`builtins`](../builtins/SKILL.md)). Use `[...c]` or `Array.from(c)` if you need a defensive copy.
 
 ### Item `.get(key)` support
 

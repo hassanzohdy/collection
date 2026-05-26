@@ -85,19 +85,17 @@ collect(events)
   .map(e => e.payload.target);
 ```
 
-## Safe sort (avoid the mutation hazard)
+## Sort without worrying about the source
+
+All sort variants (`sort`, `sortBy`, `sortByDesc`) clone internally, so the original collection is never reordered:
 
 ```ts
 function sortedCopy<T>(c: ImmutableCollection<T>, comparator: (a: T, b: T) => number) {
-  return c.clone().sort(comparator);
+  return c.sort(comparator);       // source `c` is untouched
 }
-```
 
-For key-based sorts you don't need `clone()` — `sortBy(key)` clones internally:
-
-```ts
 function byAge<T>(c: ImmutableCollection<T>) {
-  return c.sortBy("age");          // safe — source preserved
+  return c.sortBy("age");          // source preserved
 }
 ```
 
@@ -156,12 +154,22 @@ const byId = collect(users).reduce<Record<number, User>>(
 byId[42];  // O(1) lookup
 ```
 
-## Drain a queue (intentional mutation)
+## Iterate items one at a time
+
+`shift()` and `pop()` return the first/last item without removing it, so a `while (queue.length > 0)` shift-loop will spin forever. To process items sequentially, use a plain array or rebind:
 
 ```ts
-const queue = collect(jobs);
+let queue = collect(jobs);
 while (queue.length > 0) {
-  const job = queue.shift();      // mutates queue in place — what we want here
+  const job = queue.shift();        // read the head…
+  queue = queue.skip(1);            // …then advance the collection
+  await process(job);
+}
+
+// Or — simpler — drop the wrapper for queue semantics:
+const queue2 = [...collect(jobs)];
+while (queue2.length > 0) {
+  const job = queue2.shift();       // native Array.shift() mutates queue2 in place
   await process(job);
 }
 ```

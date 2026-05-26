@@ -1,6 +1,6 @@
 {
   "name": "@mongez/collection",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "A chainable, immutable array collection — filter/where, sort, group, paginate, pluck, math, and 100+ helpers over a single array reference.",
   "main": "src/index.ts",
   "sideEffects": false,

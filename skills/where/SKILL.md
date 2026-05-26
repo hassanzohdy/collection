@@ -19,8 +19,9 @@ c.where(key: string, value: any): ImmutableCollection<T>
 // 2. Operator on a keyed value:
 c.where(key: string, operator: ComparisonOperator, value: any): ImmutableCollection<T>
 
-// 3. (Documented but currently broken — see "Known issues") Operator on primitive items:
+// 3. Operator on primitive items (key omitted):
 c.where(operator: ComparisonOperator, value: any): ImmutableCollection<T>
+// e.g. collect([1, 2, 3, 4]).where(">", 2) → [3, 4]
 ```
 
 The wrapper looks at `args.length` and at whether the first arg is a known operator (`Operators` is a constant `as const` tuple of every string the switch handles).
@@ -126,12 +127,8 @@ Equivalent to `c.where(...).first()` / `c.where(...).last()`.
 
 ## Behaviors worth knowing
 
-- **`getItemValue(item, key)`** prefers `item.get(key)` when it exists (lets you pass model classes), otherwise dot-notation `get(item, key)`.
+- **`getItemValue(item, key)`** prefers `item.get(key)` when it exists (lets you pass model classes), otherwise checks for a direct own property on the item, then falls back to dot-notation `get(item, key)`.
 - **Comparing arrays / objects** uses `areEqual` from `@mongez/reinforcements`, which is a deep equality check.
 - **Date comparison** (`Date` instance vs `Date` instance) uses `+itemValue === +value` (numeric time).
 - **Empty** uses `@mongez/supportive-is`' `isEmpty` — true for `null`, `undefined`, `""`, `[]`, `{}`, etc.
-
-## Known issues
-
-- **`where(operator, value)` two-arg primitive path is broken**. `where(">", 2)` sets `isPrimitive = true` but does not rotate the args — so the switch receives the value where it expects the operator. Pinned to a skipped test. Workaround: use `.filter(n => n > 2)` directly.
-- **`where(key, "is undefined")` does NOT match items whose key is explicitly `undefined`**. The internal `getItemValue` uses the `NotExists` sentinel as the default and the upstream `get()` collapses own-undefined to "missing", so the comparison sees `NotExists`, not `undefined`. Use `where(key, "not exists")` instead.
+- **`is undefined` vs `not exists`**: own-but-explicitly-`undefined` keys match `where(key, "is undefined")`; truly-missing keys (key absent on the object) match `where(key, "not exists")`. The two are distinguishable thanks to an own-property check in `getItemValue` before falling back to the dotted `get()` helper.

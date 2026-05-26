@@ -17,7 +17,7 @@ c.sortBy({ [key]: "asc" | "desc" }): ImmutableCollection<T>  // multi-key
 c.sortByDesc(key: string): ImmutableCollection<T>        // descending by key
 ```
 
-> **Mutation hazard**: `sort()`, `sortByDesc(key)`, `reverse()` mutate the underlying array. `sortBy(key)` and `sortBy({...})` clone first and are safe. See [`mutation.md`](./mutation.md).
+All four sort variants clone `this.items` internally before sorting, so the original collection is untouched. See [`mutation`](../mutation/SKILL.md) for the full matrix.
 
 ```ts
 collect([3, 1, 2]).sort();
@@ -116,8 +116,8 @@ collect([1, 2, 1, 3, 2]).unique();    // [1, 2, 3]
 c.swap(i, j): ImmutableCollection<T>             // exchange two indices
 c.move(from, to): ImmutableCollection<T>         // splice-style reposition
 c.reorder({ [oldIndex]: newIndex }): ImmutableCollection<T>   // map of old→new positions
-c.reverse(): ImmutableCollection<T>              // MUTATES! Clone first.
-c.flip(): ImmutableCollection<T>                 // alias for reverse — also mutates
+c.reverse(): ImmutableCollection<T>              // returns a new reversed collection
+c.flip(): ImmutableCollection<T>                 // alias for reverse
 ```
 
 ```ts
