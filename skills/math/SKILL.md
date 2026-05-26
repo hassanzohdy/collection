@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-math
-description: Aggregate functions (sum, min, max, average, median), per-element arithmetic (plus, minus, multiply, divide), parity filters (even, odd), and counting helpers.
-when_to_use: Use when the user calls sum(), min(), max(), average(), plus(), minus(), multiply(), divide(), modulus(), increment(), decrement(), even(), odd(), count(), countBy(), or countValue() on a collection.
+description: |
+  Aggregate reducers (`sum`, `min`, `max`, `average`, `avg`, `median`), per-element arithmetic (`plus`, `minus`, `multiply`, `divide`, `modulus`, `increment`, `decrement`, `double`, `half`), parity filters (`even`, `odd`, `evenIndexes`, `oddIndexes`), and counting (`count`, `countValue`, `countBy`). Covers the reinforcements quirks (`min`/`max`-of-empty = 0, `average`-of-empty = NaN, divide-by-zero throws) and the keyed-form source-mutation gotcha.
+  TRIGGER when: code calls `c.sum`, `c.min`, `c.max`, `c.average`, `c.avg`, `c.median`, `c.plus`, `c.minus`, `c.multiply`, `c.divide`, `c.modulus`, `c.increment`, `c.decrement`, `c.double`, `c.half`, `c.even`, `c.odd`, `c.evenIndexes`, `c.oddIndexes`, `c.count`, `c.countValue`, or `c.countBy` on an `ImmutableCollection`; user asks "how do I sum / average / total / max / min on a collection field", "why does min return 0", "how to bump every item by 1", "why does divide throw".
+  SKIP: math without a fluent chain or operator filter — use `mongez-reinforcements-arrays` (lighter `sum` / `min` / `max` / `average` / `median` / `count` / `countBy`); the higher-level "when to use which math method" tutorial — use `mongez-collection-math-aggregation`; aggregation downstream of `groupBy` — see `mongez-collection-transforming` or `mongez-collection-recipes`.
 ---
 
 # Math, parity, and counting

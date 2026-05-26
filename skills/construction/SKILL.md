@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-construction
-description: How to create an ImmutableCollection using collect(), new ImmutableCollection(), collect.create(), and collect.fromIterator().
-when_to_use: Use when the user is constructing a collection from an array, Set, generator, or fixed-length initializer, or when they ask how to wrap data in @mongez/collection.
+description: |
+  How to create an `ImmutableCollection` using `collect()`, `new ImmutableCollection()`, `collect.create()`, and `collect.fromIterator()` — including iterable inputs (Set, Map, generator) and seeded-length factories.
+  TRIGGER when: code imports `collect`, `ImmutableCollection`, `collect.create`, `collect.fromIterator`, or `ImmutableCollection.fromIterator` / `ImmutableCollection.create` from `@mongez/collection`; user asks "how do I create a collection", "how to wrap an array / Set / Map / generator", "how to seed N items", "how to make a collection from an iterable"; `import { collect, ImmutableCollection } from "@mongez/collection"`.
+  SKIP: operating on an already-built collection (filter / map / sort / aggregate) — use the operation-specific skills (`mongez-collection-querying`, `mongez-collection-transforming`, etc.); `@mongez/reinforcements` standalone helpers — use `mongez-reinforcements-arrays` for one-shot helpers without a wrapper.
 ---
 
 # Construction

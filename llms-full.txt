@@ -23,6 +23,9 @@ import {
 
 ## collect / ImmutableCollection
 
+> **Auto-trigger:** code imports `collect`, `ImmutableCollection`, `collect.create`, `collect.fromIterator`, or `ImmutableCollection.fromIterator` / `ImmutableCollection.create` from `@mongez/collection`; user asks "how do I create a collection", "how to wrap an array / Set / Map / generator", "how to seed N items", "how to make a collection from an iterable"; `import { collect, ImmutableCollection } from "@mongez/collection"`.
+> **Skip when:** operating on an already-built collection (filter / map / sort / aggregate) — use the operation-specific skills (`mongez-collection-querying`, `mongez-collection-transforming`, etc.); `@mongez/reinforcements` standalone helpers — use `mongez-reinforcements-arrays` for one-shot helpers without a wrapper.
+
 ```ts
 collect<T>(items?: T[] | ImmutableCollection<T>): ImmutableCollection<T>
 
@@ -39,6 +42,9 @@ The constructor clones the input array. Passing anything other than an array or 
 
 ## Mutation reference (read this first)
 
+> **Auto-trigger:** code calls `c.sort`, `c.reverse`, `c.flip`, `c.sortByDesc`, `c.shift`, `c.pop`, `c.clone`, or `c.copy` on an `ImmutableCollection`; user asks "is sort/reverse/shift/pop safe", "why is my original collection changing", "do I need to clone before sorting", "which methods mutate in @mongez/collection", "is toArray a copy"; debugging an unexpected mutation bug on a shared collection.
+> **Skip when:** non-mutating sort by key (`sortBy(key)` and `sortBy({...})`) — use `mongez-collection-sort-group`; insert / remove / replace operations that always return new — use `mongez-collection-overview` for the global picture; understanding what `@mongez/reinforcements` does on its own — that package has no wrapper to mutate.
+
 Despite the "Immutable" prefix, four methods mutate the underlying array:
 
 | Method | Behavior |
@@ -54,6 +60,9 @@ Workaround: `c.clone().sort(...)` or `c.clone().reverse()`.
 Everything else returns a new collection.
 
 ## Array-builtin parity
+
+> **Auto-trigger:** code calls any of `c.map`, `c.filter`, `c.flat`, `c.flatMap`, `c.reduce`, `c.reduceRight`, `c.find`, `c.findIndex`, `c.indexOf`, `c.lastIndexOf`, `c.includes`, `c.contains`, `c.every`, `c.some`, `c.join`, `c.implode`, `c.forEach`, `c.each`, `c.keys`, `c.values`, `c.entries`, `c.indexes`, `c.toArray`, `c.all`, `c.toJson`, `c.toString`, `c.takeWhile`, `c.removeAll` on an `ImmutableCollection`; user asks "how do I map / filter / reduce a collection", "why is reduce returning NaN", "how do I unwrap to a plain array", "is toArray a copy"; file iterates / spreads / `Array.from`s a collection.
+> **Skip when:** operator-based filtering (`where(...)`) — use `mongez-collection-where` or `mongez-collection-querying`; aggregate math (`sum`/`avg`/`min`/`max`) — use `mongez-collection-math`; `pluck` / `select` / `groupBy` / `partition` — use `mongez-collection-transforming` or `mongez-collection-sort-group`; standalone array helpers without `@mongez/collection` — use `mongez-reinforcements-arrays` instead.
 
 ```ts
 // Transforms (return new collection)
@@ -169,6 +178,9 @@ c.lastIndex(): number                            // length - 1
 
 ## where(...) — operator filtering
 
+> **Auto-trigger:** code calls `c.where`, `c.whereIn`, `c.whereNot`, `c.whereBetween`, `c.whereNotBetween`, `c.whereEmpty`, `c.whereNotEmpty`, `c.heavy`, `c.whereNull`, `c.whereNotNull`, `c.whereUndefined`, `c.whereNotUndefined`, `c.whereExists`, `c.whereNotExists`, `c.firstWhere`, `c.lastWhere`, or imports `Operators` / `ComparisonOperator` from `@mongez/collection`; user asks "how do I filter by `>` / `like` / `between` / `in` / `null`", "what operators does where support", "how to use a RegExp with where", "is `where(key, 'is undefined')` broken".
+> **Skip when:** predicate-callback filtering (`filter`, `reject`, `except`, `not`) — use `mongez-collection-querying` or `mongez-collection-builtins`; aggregations or projections downstream of a filter — chain into `mongez-collection-math` or `mongez-collection-transforming`; `@mongez/reinforcements` has NO `where(...)` operator engine — recommend this skill over `mongez-reinforcements-arrays` when the user needs operator filtering.
+
 Three overloads:
 
 ```ts
@@ -233,6 +245,9 @@ c.rejectLast(cb) / exceptLast(cb): ImmutableCollection<T>     // drop last match
 
 ## Math
 
+> **Auto-trigger:** code calls `c.sum`, `c.min`, `c.max`, `c.average`, `c.avg`, `c.median`, `c.plus`, `c.minus`, `c.multiply`, `c.divide`, `c.modulus`, `c.increment`, `c.decrement`, `c.double`, `c.half`, `c.even`, `c.odd`, `c.evenIndexes`, `c.oddIndexes`, `c.count`, `c.countValue`, or `c.countBy` on an `ImmutableCollection`; user asks "how do I sum / average / total / max / min on a collection field", "why does min return 0", "how to bump every item by 1", "why does divide throw".
+> **Skip when:** math without a fluent chain or operator filter — use `mongez-reinforcements-arrays` (lighter `sum` / `min` / `max` / `average` / `median` / `count` / `countBy`); the higher-level "when to use which math method" tutorial — use `mongez-collection-math-aggregation`; aggregation downstream of `groupBy` — see `mongez-collection-transforming` or `mongez-collection-recipes`.
+
 ```ts
 c.min(key?): number                              // 0 for empty array (reinforcements quirk)
 c.max(key?): number                              // 0 for empty array
@@ -265,6 +280,9 @@ c.countBy(key): Record<string, number>
 
 ## Strings
 
+> **Auto-trigger:** code calls `c.appendString`, `c.prependString`, `c.concatString`, `c.replaceString`, `c.replaceAllString`, `c.removeString`, `c.removeAllString`, `c.trim`, `c.string`, `c.number`, or `c.boolean` on an `ImmutableCollection`; user asks "how do I append / prepend / replace / strip / trim text on every item", "how to cast a collection of strings to numbers / booleans", "how to apply a string transform to one field of every object".
+> **Skip when:** ad-hoc string mapping where `c.map(item => ...)` is clearer — use `mongez-collection-builtins`; single-string formatting helpers — those live in `@mongez/reinforcements` (string slugify / kebab / camel / template) and are out of scope here; `replaceAllString` with a `RegExp` value — it forces `new RegExp(s, "g")`, use `replaceString(/regex/g, ...)` instead.
+
 ```ts
 // All keyed forms mutate the source items via reinforcements `set`.
 c.appendString(s, key?): ImmutableCollection<T>
@@ -283,6 +301,9 @@ c.boolean(): ImmutableCollection<boolean>
 ```
 
 ## Pagination / slice / chunk
+
+> **Auto-trigger:** code calls `c.take`, `c.limit`, `c.takeLast`, `c.takeUntil`, `c.takeWhile`, `c.skip`, `c.skipTo`, `c.skipLast`, `c.skipUntil`, `c.skipLastUntil`, `c.skipLastWhile`, `c.skipWhile`, `c.slice`, `c.splice`, `c.chunk`, `c.random`, or `c.shuffle` on an `ImmutableCollection`; user asks "how do I paginate a collection", "how to take the first N / last N / page N", "how to batch into chunks of 100", "how to grab a random sample / shuffle".
+> **Skip when:** page metadata (total / hasNext / totalPages) — not built-in, manually compute from `.length`; chunk a plain array without a wrapper — use `chunk` from `mongez-reinforcements-arrays`; sorting before pagination — chain `sortBy` from `mongez-collection-sort-group` first.
 
 ```ts
 c.take(n) / limit(n): ImmutableCollection<T>
@@ -309,6 +330,9 @@ c.shuffle(): ImmutableCollection<T>
 
 ## Sort / group / partition / unique
 
+> **Auto-trigger:** code calls `c.sort`, `c.sortBy`, `c.sortByDesc`, `c.groupBy`, `c.partition`, `c.unique`, `c.uniqueList`, `c.swap`, `c.move`, `c.reorder`, `c.reverse`, or `c.flip` on an `ImmutableCollection`; user asks "how do I sort by a field / multiple keys", "ascending vs descending", "how to group by role / category", "how to split active vs inactive", "how to dedupe by email", "how to swap two positions / reorder a list".
+> **Skip when:** mutation safety details for `sort` / `reverse` / `sortByDesc` — use `mongez-collection-mutation` for the in-depth matrix; column projection after grouping — see `mongez-collection-transforming` for `pluck` / `select`; standalone `groupBy` / `unique` without a wrapper — use `mongez-reinforcements-arrays` (lighter helpers); shuffle / random — see `mongez-collection-pagination`.
+
 ```ts
 c.sort(cb?): ImmutableCollection<T>              // MUTATES — clone first
 c.sortBy(key: string): ImmutableCollection<T>    // safe (clones)
@@ -325,6 +349,9 @@ c.uniqueList(key): ImmutableCollection<T>          // first object per unique ke
 ```
 
 ## Projection
+
+> **Auto-trigger:** code calls `c.pluck`, `c.select`, `c.collectFrom`, `c.collectFromKey`, `c.partition`, `c.uniqueList` on an `ImmutableCollection`; user asks "how do I extract one field from every item", "how to project to a new shape / DTO", "how to keep only some keys per object", "how to flatten line items", "how to split into matching / not-matching"; chained pipelines that combine map + group + dedupe.
+> **Skip when:** simple `map` / `filter` / `flat` / `flatMap` reference — use `mongez-collection-builtins`; operator filtering before transforming — chain via `mongez-collection-where` or `mongez-collection-querying`; the sort + group + unique reference matrix — use `mongez-collection-sort-group`; one-shot `pluck` / `groupBy` / `unique` without a chain — use `mongez-reinforcements-arrays` (lighter, tree-shakeable).
 
 ```ts
 c.pluck(key | keys): ImmutableCollection

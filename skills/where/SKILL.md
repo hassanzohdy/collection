@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-where
-description: Full reference for the where() operator-based filter and all its shorthand helpers (whereIn, whereNull, whereBetween, etc.).
-when_to_use: Use when the user is filtering a collection with where(), a comparison operator string, or any whereXxx shorthand method.
+description: |
+  Full reference for the `where(...)` operator-based filter (50+ operators: `=`, `>`, `like`, `between`, `in`, `is`, `instanceof`, `exists`, `empty`, `null`, `regex`, ...) plus shorthand helpers (`whereIn`, `whereNot`, `whereBetween`, `whereNotBetween`, `whereEmpty`, `whereNotEmpty`, `heavy`, `whereNull`, `whereNotNull`, `whereUndefined`, `whereNotUndefined`, `whereExists`, `whereNotExists`) and `firstWhere` / `lastWhere`. Documents the broken primitive-mode and `is undefined` quirks plus the `Operators` constant.
+  TRIGGER when: code calls `c.where`, `c.whereIn`, `c.whereNot`, `c.whereBetween`, `c.whereNotBetween`, `c.whereEmpty`, `c.whereNotEmpty`, `c.heavy`, `c.whereNull`, `c.whereNotNull`, `c.whereUndefined`, `c.whereNotUndefined`, `c.whereExists`, `c.whereNotExists`, `c.firstWhere`, `c.lastWhere`, or imports `Operators` / `ComparisonOperator` from `@mongez/collection`; user asks "how do I filter by `>` / `like` / `between` / `in` / `null`", "what operators does where support", "how to use a RegExp with where", "is `where(key, 'is undefined')` broken".
+  SKIP: predicate-callback filtering (`filter`, `reject`, `except`, `not`) — use `mongez-collection-querying` or `mongez-collection-builtins`; aggregations or projections downstream of a filter — chain into `mongez-collection-math` or `mongez-collection-transforming`; `@mongez/reinforcements` has NO `where(...)` operator engine — recommend this skill over `mongez-reinforcements-arrays` when the user needs operator filtering.
 ---
 
 # `where(...)` — operator-based filtering

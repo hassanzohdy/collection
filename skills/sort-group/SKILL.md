@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-sort-group
-description: How to sort, group, partition, deduplicate, and reorder items in a collection using sortBy, groupBy, partition, unique, uniqueList, swap, move, and reorder.
-when_to_use: Use when the user calls sortBy(), sortByDesc(), sort(), groupBy(), partition(), unique(), uniqueList(), swap(), move(), reorder(), reverse(), or flip() on a collection.
+description: |
+  How to sort, group, partition, deduplicate, and reorder items in an `ImmutableCollection` — `sort`, `sortBy`, `sortByDesc`, `groupBy`, `partition`, `unique`, `uniqueList`, `swap`, `move`, `reorder`, `reverse`, `flip`. Covers stability, multi-key `sortBy({...})`, the `unique` vs `uniqueList` shape difference, and which sort variants mutate.
+  TRIGGER when: code calls `c.sort`, `c.sortBy`, `c.sortByDesc`, `c.groupBy`, `c.partition`, `c.unique`, `c.uniqueList`, `c.swap`, `c.move`, `c.reorder`, `c.reverse`, or `c.flip` on an `ImmutableCollection`; user asks "how do I sort by a field / multiple keys", "ascending vs descending", "how to group by role / category", "how to split active vs inactive", "how to dedupe by email", "how to swap two positions / reorder a list".
+  SKIP: mutation safety details for `sort` / `reverse` / `sortByDesc` — use `mongez-collection-mutation` for the in-depth matrix; column projection after grouping — see `mongez-collection-transforming` for `pluck` / `select`; standalone `groupBy` / `unique` without a wrapper — use `mongez-reinforcements-arrays` (lighter helpers); shuffle / random — see `mongez-collection-pagination`.
 ---
 
 # Sort / group / partition / unique

@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-strings
-description: Per-element string transforms on a collection — append, prepend, replace, remove, trim, and type casting (string, number, boolean).
-when_to_use: Use when the user calls appendString(), prependString(), concatString(), replaceString(), replaceAllString(), removeString(), removeAllString(), trim(), string(), number(), or boolean() on a collection.
+description: |
+  Per-element string transforms on an `ImmutableCollection` — `appendString`, `prependString`, `concatString`, `replaceString`, `replaceAllString`, `removeString`, `removeAllString`, `trim` — plus type casting (`string`, `number`, `boolean`). Documents the keyed-form source mutation, the `replaceAllString` "always global regex" trap, and when to reach for `.map` instead.
+  TRIGGER when: code calls `c.appendString`, `c.prependString`, `c.concatString`, `c.replaceString`, `c.replaceAllString`, `c.removeString`, `c.removeAllString`, `c.trim`, `c.string`, `c.number`, or `c.boolean` on an `ImmutableCollection`; user asks "how do I append / prepend / replace / strip / trim text on every item", "how to cast a collection of strings to numbers / booleans", "how to apply a string transform to one field of every object".
+  SKIP: ad-hoc string mapping where `c.map(item => ...)` is clearer — use `mongez-collection-builtins`; single-string formatting helpers — those live in `@mongez/reinforcements` (string slugify / kebab / camel / template) and are out of scope here; `replaceAllString` with a `RegExp` value — it forces `new RegExp(s, "g")`, use `replaceString(/regex/g, ...)` instead.
 ---
 
 # Per-element string transforms

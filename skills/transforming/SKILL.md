@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-transforming
-description: How to reshape, project, and restructure collection items using map, pluck, groupBy, unique, flatten, partition, and related methods.
-when_to_use: Use when converting collection items to a new shape, extracting a column of values, grouping by a key, removing duplicates, or splitting into sub-collections.
+description: |
+  Tutorial-style guide to reshaping collection items — `map`, `pluck`, `select`, `groupBy`, `unique`, `uniqueList`, `flat`, `flatMap`, `collectFrom`, `collectFromKey`, `partition`. Covers column projection, dot-notation paths, flattening nested fields, splitting into two pipelines, and the `groupBy` → `items` sub-array convention.
+  TRIGGER when: code calls `c.pluck`, `c.select`, `c.collectFrom`, `c.collectFromKey`, `c.partition`, `c.uniqueList` on an `ImmutableCollection`; user asks "how do I extract one field from every item", "how to project to a new shape / DTO", "how to keep only some keys per object", "how to flatten line items", "how to split into matching / not-matching"; chained pipelines that combine map + group + dedupe.
+  SKIP: simple `map` / `filter` / `flat` / `flatMap` reference — use `mongez-collection-builtins`; operator filtering before transforming — chain via `mongez-collection-where` or `mongez-collection-querying`; the sort + group + unique reference matrix — use `mongez-collection-sort-group`; one-shot `pluck` / `groupBy` / `unique` without a chain — use `mongez-reinforcements-arrays` (lighter, tree-shakeable).
 ---
 
 # Transforming a Collection

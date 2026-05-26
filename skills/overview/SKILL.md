@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-overview
-description: Explains what @mongez/collection is, when to prefer it over plain arrays or @mongez/reinforcements, and how the immutability model works.
-when_to_use: Use when deciding whether to introduce the package, when onboarding new contributors, or when a chain of 3+ array operations is being written.
+description: |
+  Explains what `@mongez/collection` is, when to prefer it over plain arrays or `@mongez/reinforcements`, and how the `ImmutableCollection` immutability model works.
+  TRIGGER when: code imports `collect` or `ImmutableCollection` from `@mongez/collection`; user asks "what is @mongez/collection", "should I use collect or reinforcements", "how does the immutability work", "when do I reach for a fluent chain"; file is about to wrap an array in `collect(...)` or chain 3+ array ops.
+  SKIP: deep dives into a specific method group — use `mongez-collection-querying` / `mongez-collection-math` / `mongez-collection-sort-group` / `mongez-collection-pagination` / `mongez-collection-transforming` / `mongez-collection-strings` / `mongez-collection-mutation` instead; `@mongez/reinforcements` has lighter array helpers (`chunk`, `unique`, `sum`, etc.) — point users to `mongez-reinforcements-arrays` for those; React state / atoms — use `@mongez/atom`'s `atomCollection`.
 ---
 
 # @mongez/collection — Overview

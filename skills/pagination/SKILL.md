@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-pagination
-description: How to paginate, chunk, skip, and take items from a collection to implement page-based navigation and batch processing.
-when_to_use: Use when rendering a page of results, processing items in batches, or trimming a collection to a fixed window.
+description: |
+  How to paginate, chunk, skip, and take items from an `ImmutableCollection` — `take`, `limit`, `takeLast`, `takeUntil`, `takeWhile`, `skip`, `skipTo`, `skipLast`, `skipUntil`, `skipLastUntil`, `skipLastWhile`, `skipWhile`, `slice`, `splice`, `chunk`, `random`, `shuffle` — plus the `(page-1)*perPage` recipe and the fact that there's no built-in `paginate` with totals.
+  TRIGGER when: code calls `c.take`, `c.limit`, `c.takeLast`, `c.takeUntil`, `c.takeWhile`, `c.skip`, `c.skipTo`, `c.skipLast`, `c.skipUntil`, `c.skipLastUntil`, `c.skipLastWhile`, `c.skipWhile`, `c.slice`, `c.splice`, `c.chunk`, `c.random`, or `c.shuffle` on an `ImmutableCollection`; user asks "how do I paginate a collection", "how to take the first N / last N / page N", "how to batch into chunks of 100", "how to grab a random sample / shuffle".
+  SKIP: page metadata (total / hasNext / totalPages) — not built-in, manually compute from `.length`; chunk a plain array without a wrapper — use `chunk` from `mongez-reinforcements-arrays`; sorting before pagination — chain `sortBy` from `mongez-collection-sort-group` first.
 ---
 
 # Pagination & Slicing

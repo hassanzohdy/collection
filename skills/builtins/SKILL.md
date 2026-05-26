@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-builtins
-description: Array.prototype parity methods on ImmutableCollection — map, filter, flat, flatMap, reduce, find, every, some, join, forEach, keys, values, entries, and conversion helpers.
-when_to_use: Use when the user calls map(), filter(), flat(), flatMap(), reduce(), reduceRight(), find(), findIndex(), indexOf(), includes(), every(), some(), join(), forEach(), keys(), values(), entries(), toArray(), all(), toJson(), or spreads/iterates a collection.
+description: |
+  `Array.prototype` parity methods on `ImmutableCollection` — `map`, `filter`, `flat`, `flatMap`, `reduce`, `reduceRight`, `find`, `findIndex`, `indexOf`, `lastIndexOf`, `includes`, `contains`, `every`, `some`, `join`, `implode`, `forEach`, `each`, `keys`, `values`, `entries`, `indexes`, `toArray`, `all`, `toJson`, `toString`, `takeWhile`, `removeAll`. Documents the `reduce(cb)` NaN pitfall and the live-array `toArray()` reference quirk.
+  TRIGGER when: code calls any of `c.map`, `c.filter`, `c.flat`, `c.flatMap`, `c.reduce`, `c.reduceRight`, `c.find`, `c.findIndex`, `c.indexOf`, `c.lastIndexOf`, `c.includes`, `c.contains`, `c.every`, `c.some`, `c.join`, `c.implode`, `c.forEach`, `c.each`, `c.keys`, `c.values`, `c.entries`, `c.indexes`, `c.toArray`, `c.all`, `c.toJson`, `c.toString`, `c.takeWhile`, `c.removeAll` on an `ImmutableCollection`; user asks "how do I map / filter / reduce a collection", "why is reduce returning NaN", "how do I unwrap to a plain array", "is toArray a copy"; file iterates / spreads / `Array.from`s a collection.
+  SKIP: operator-based filtering (`where(...)`) — use `mongez-collection-where` or `mongez-collection-querying`; aggregate math (`sum`/`avg`/`min`/`max`) — use `mongez-collection-math`; `pluck` / `select` / `groupBy` / `partition` — use `mongez-collection-transforming` or `mongez-collection-sort-group`; standalone array helpers without `@mongez/collection` — use `mongez-reinforcements-arrays` instead.
 ---
 
 # Array-prototype parity

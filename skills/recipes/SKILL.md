@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-recipes
-description: Ready-to-copy idiomatic patterns combining multiple @mongez/collection methods — top-N, pagination, groupBy+aggregate, partition, dedup, tap, safe sort, batch chunking, and queue draining.
-when_to_use: Use when the user wants a complete worked example or multi-method pipeline pattern with @mongez/collection, rather than a single-method reference.
+description: |
+  Idiomatic multi-method pipelines for `@mongez/collection` — top-N (`where` + `sortByDesc` + `take` + `pluck`), pagination (`skip` + `take`), bucket-then-aggregate (`groupBy` + `map` + `sum`), partition for dual pipelines, dedupe-and-project (`uniqueList` + `pluck`), `tap` for side-effects mid-chain, safe sort via `clone`, chunk-based batch processing, Map → collection conversion, lookup index via `reduce`, and intentional queue draining via `shift`.
+  TRIGGER when: user asks "show me a worked example with @mongez/collection", "how do I do top-10 customers", "how to compute totals per group", "how to safely sort without mutating", "how to batch upload in chunks", "how to convert a Map into a collection", "how to drain a queue"; user wants a full chained pipeline rather than a single method.
+  SKIP: single-method lookup — use the focused skill (`mongez-collection-where`, `mongez-collection-math`, `mongez-collection-sort-group`, `mongez-collection-pagination`, `mongez-collection-transforming`, `mongez-collection-mutation`, etc.); standalone array helpers — use `mongez-reinforcements-arrays` (no wrapper, no chain); React state — use `@mongez/atom`'s `atomCollection`.
 ---
 
 # Recipes

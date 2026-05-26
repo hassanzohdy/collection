@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-math-aggregation
-description: How to compute sum, average, min, max, median, count, and per-item arithmetic transforms on a collection.
-when_to_use: Use when computing aggregate statistics over a collection or when applying arithmetic to every item or a specific field of every item.
+description: |
+  Tutorial-style "when to use which math method" guide for `@mongez/collection` — totaling, averaging, finding min/max/median, counting by predicate or by key, applying per-item arithmetic (`plus`/`minus`/`multiply`/`divide`/`modulus`/`increment`/`decrement`/`double`/`half`), parity filters (`even`/`odd`/`evenIndexes`/`oddIndexes`).
+  TRIGGER when: user asks "how do I total / aggregate / sum up / average a field across items", "how to apply a markup / discount to every item", "how to count items matching a condition", "what's the difference between count / countValue / countBy"; user explores math methods without a specific method name in mind; code shapes look like aggregating monetary or analytic fields with `collect(...)`.
+  SKIP: lookup-style "what does method X do" — use `mongez-collection-math` for the exact reference; one-shot aggregation without a chain — use `mongez-reinforcements-arrays`' standalone `sum`/`average`/`min`/`max`/`median`/`count`/`countBy` instead; filtering or sorting downstream of math — see `mongez-collection-querying` / `mongez-collection-sort-group`.
 ---
 
 # Math & Aggregation

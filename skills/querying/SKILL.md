@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-querying
-description: How to filter and look up items in a collection using where, filter, find, first, last, and the full operator table.
-when_to_use: Use when writing any keyed or operator-based filter on a collection, or when looking up a single matching item.
+description: |
+  Tutorial-style guide to filtering and lookup on an `ImmutableCollection` — `where`, `whereIn`, `whereBetween`, `whereNotBetween`, `whereNot`, `whereNull`, `whereNotNull`, `whereEmpty`, `whereNotEmpty`, `whereExists`, `whereNotExists`, `filter`, `reject`, `except`, `not`, `find`, `first`, `last`, `firstWhere`, `lastWhere`. Covers RegExp shorthand, dot-notation paths, AND-chaining vs OR via `filter`, and item `.get(key)` integration with model classes.
+  TRIGGER when: user asks "how do I filter / search / look up an item in a collection", "how to chain multiple where clauses", "how to do AND / OR filters", "how to find the first / last match", "what's the difference between filter and reject"; code combines several `whereXxx` calls.
+  SKIP: the exhaustive 50+ operator reference table — use `mongez-collection-where` instead; predicate-only `filter` / `every` / `some` without operators — use `mongez-collection-builtins`; projection after filtering — chain into `mongez-collection-transforming`; one-shot filtering without a wrapper — `mongez-reinforcements-arrays` has no operator engine, so this skill is the right choice when operators are needed.
 ---
 
 # Querying a Collection

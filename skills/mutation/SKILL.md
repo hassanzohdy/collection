@@ -1,7 +1,9 @@
 ---
 name: mongez-collection-mutation
-description: Definitive guide to which ImmutableCollection methods mutate in place (sort, reverse, shift, pop, sortByDesc) versus which return a new collection.
-when_to_use: Use when the user hits an unexpected mutation bug, asks about sort()/reverse()/shift()/pop() side effects, or needs to know whether a specific method is safe to call on a shared collection.
+description: |
+  Definitive matrix of which `ImmutableCollection` methods mutate in place — `sort`, `reverse` / `flip`, `sortByDesc`, `shift`, `pop` — versus which return a new collection. Covers `clone` / `copy` workarounds and the `toArray()` / `all()` live-reference hazard.
+  TRIGGER when: code calls `c.sort`, `c.reverse`, `c.flip`, `c.sortByDesc`, `c.shift`, `c.pop`, `c.clone`, or `c.copy` on an `ImmutableCollection`; user asks "is sort/reverse/shift/pop safe", "why is my original collection changing", "do I need to clone before sorting", "which methods mutate in @mongez/collection", "is toArray a copy"; debugging an unexpected mutation bug on a shared collection.
+  SKIP: non-mutating sort by key (`sortBy(key)` and `sortBy({...})`) — use `mongez-collection-sort-group`; insert / remove / replace operations that always return new — use `mongez-collection-overview` for the global picture; understanding what `@mongez/reinforcements` does on its own — that package has no wrapper to mutate.
 ---
 
 # Mutation reference
