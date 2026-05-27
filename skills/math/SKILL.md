@@ -71,7 +71,7 @@ Class instances and nested object references are still passed through by referen
 
 ### Division / modulus by zero
 
-`divide` / `modulus` throw a `RangeError`-shaped `Error` when the divisor is zero. The error message is `"Cannot divide by zero"` / `"Cannot have a modulus of zero"`.
+`divide` / `modulus` throw a plain `Error` when the divisor is zero. The error message is `"Cannot divide by zero"` / `"Cannot have a modulus of zero"`.
 
 ## Parity
 

@@ -113,6 +113,16 @@ collect(items).skipLastUntil(item => item.id === targetId);
 // All items up to (but not including) the first one matching the predicate.
 ```
 
+### `random` / `shuffle` — sampling
+
+```ts
+collect(items).random();          // one random item (not a collection)
+collect(items).random(5);         // five random items as a new collection
+collect(items).shuffle();         // shuffled copy (non-mutating)
+```
+
+`random(n)` is `shuffle().take(n)` under the hood; `random()` with no argument returns a single item (the first of the shuffled copy), not a collection.
+
 ## Key details / Pitfalls
 
 - All slicing methods are **non-mutating** and return new collections.

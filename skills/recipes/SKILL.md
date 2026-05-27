@@ -37,7 +37,7 @@ function paginate<T>(c: ImmutableCollection<T>, page: number, perPage: number) {
 paginate(collect(products), 3, 20);
 ```
 
-For server-side pagination, see also `mongez-collection-pagination` for the `paginate` method that returns metadata alongside the items.
+There's no built-in `paginate(page, perPage)` that returns metadata — compose it from `length` + `skip().take()`. See `mongez-collection-pagination` for the slicing primitives.
 
 ## Find active users seen in the last week
 

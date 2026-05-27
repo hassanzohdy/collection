@@ -84,15 +84,18 @@ collect(users)
 
 ```ts
 collect([1, 2, 2, 3]).unique();           // [1, 2, 3]
-collect(users).unique("email");           // first per unique email
+collect(users).unique("email");           // ["a@x", "b@x", ...] — VALUES at the key, not objects
 ```
 
-### `uniqueList` — keep first occurrence per key value (preserves order)
+> `unique("key")` returns the VALUES at that key (via `pluck` + `Set`). For deduped OBJECTS (one per unique key value), use `uniqueList(key)` instead.
 
-Like `unique(key)` but explicitly documented as "first encountered wins":
+### `uniqueList` — keep first occurrence (as objects) per key value
+
+Returns the original item objects — one per unique key value, in source order:
 
 ```ts
 collect(products).uniqueList("sku");
+// [{ sku: "A", ... }, { sku: "B", ... }, ...]
 ```
 
 ### `flat` / `flatMap` — flatten nested arrays
