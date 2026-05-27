@@ -8,6 +8,41 @@ description: |
 
 # @mongez/collection — Overview
 
+## Install
+
+```sh
+# npm
+npm install @mongez/collection
+
+# yarn
+yarn add @mongez/collection
+
+# pnpm
+pnpm add @mongez/collection
+```
+
+Runtime deps: `@mongez/reinforcements` (array/object helpers) and `@mongez/supportive-is` (powers the `empty` operator).
+
+## Quick example
+
+Operator-based filtering, group-and-aggregate, and sorted top-N — all in one chain that reads top-to-bottom:
+
+```ts
+import { collect } from "@mongez/collection";
+
+const topSpenders = collect(orders)
+  .where("status", "paid")
+  .where("total", ">", 100)
+  .groupBy("customerId")
+  .map(bucket => ({
+    customerId: bucket.customerId,
+    spent: collect(bucket.items).sum("total"),
+  }))
+  .sortByDesc("spent")
+  .take(10)
+  .all();
+```
+
 ## When to use
 
 Reach for `@mongez/collection` when:
