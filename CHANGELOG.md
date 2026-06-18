@@ -1,6 +1,6 @@
 # Changelog — @mongez/collection
 
-## Unreleased
+## [1.3.5] — 2026-05-27
 
 ### Fixed
 
@@ -30,13 +30,6 @@
   - `dependencies['@mongez/reinforcements']` bumped from `^2.3.8` to `^3.1.0`. The surfaces used by collection (`get`, `set`, `clone`, `areEqual`, `min`, `max`, `sum`, `average`, `median`, `chunk`, `countBy`, `count`, `even`, `odd`, `evenIndexes`, `oddIndexes`, `groupBy`, `only`, `pluck`, `pushUnique`, `shuffle`, `trim`, `unique`, `unshiftUnique`) are all stable across v3. See [reinforcements v3 MIGRATION](../reinforcements/MIGRATION.md).
   - `scripts.test` set to `vitest run`; `scripts.test:watch` added; `scripts.test:coverage` added.
   - Removed `jest`, `ts-jest`, `jest-esm-jsx-transform`, `@types/jest` from `devDependencies`; added `vitest`.
-
-### Not changed (intentionally)
-
-- **No public API changes**. Every method, alias, and operator is preserved. Existing call sites continue to work identically.
-- **No new features**. The package is being brought up to the documentation and test bar — no method additions or signature changes.
-- **No runtime dependency additions**. Only the version of `@mongez/reinforcements` was bumped.
-- **Old `tests/` folder** under jest is left in place for safety (not deleted) — it can be removed in a follow-up once teams confirm the new vitest suite is the source of truth.
 
 ### Tests
 
