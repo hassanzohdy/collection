@@ -281,7 +281,7 @@ c.countBy(key): Record<string, number>
 ## Strings
 
 > **Auto-trigger:** code calls `c.appendString`, `c.prependString`, `c.concatString`, `c.replaceString`, `c.replaceAllString`, `c.removeString`, `c.removeAllString`, `c.trim`, `c.string`, `c.number`, or `c.boolean` on an `ImmutableCollection`; user asks "how do I append / prepend / replace / strip / trim text on every item", "how to cast a collection of strings to numbers / booleans", "how to apply a string transform to one field of every object".
-> **Skip when:** ad-hoc string mapping where `c.map(item => ...)` is clearer — use `mongez-collection-builtins`; single-string formatting helpers — those live in `@mongez/reinforcements` (string slugify / kebab / camel / template) and are out of scope here; `replaceAllString` with a `RegExp` value — it forces `new RegExp(s, "g")`, use `replaceString(/regex/g, ...)` instead.
+> **Skip when:** ad-hoc string mapping where `c.map(item => ...)` is clearer — use `mongez-collection-builtins`; single-string formatting helpers — those live in `@mongez/reinforcements` (string slugify / kebab / camel / template) and are out of scope here; `replaceAllString` with a pattern — its search string is regex-escaped and matched literally, use `replaceString(/regex/g, ...)` instead.
 
 ```ts
 // All keyed forms mutate the source items via reinforcements `set`.
@@ -289,7 +289,7 @@ c.appendString(s, key?): ImmutableCollection<T>
 c.prependString(s, key?): ImmutableCollection<T>
 c.concatString(s, key?): ImmutableCollection<T>           // identical to appendString for strings
 c.replaceString(search: string | RegExp, repl: string, key?): ImmutableCollection<T>
-c.replaceAllString(search: string, repl: string, key?): ImmutableCollection<T>  // search is always promoted to global regex
+c.replaceAllString(search: string, repl: string, key?): ImmutableCollection<T>  // global; search matched literally (regex-escaped)
 c.removeString(search: string | RegExp, key?): ImmutableCollection<T>
 c.removeAllString(search: string, key?): ImmutableCollection<T>
 c.trim(chars?: string, key?): ImmutableCollection<T>     // default chars = " "

@@ -118,6 +118,27 @@ describe("where — pattern matching", () => {
     ).toEqual([2, 3, 4]);
   });
 
+  it("'like' treats regex metacharacters in a plain string as literal text", () => {
+    const items = [{ name: "a.b" }, { name: "axb" }];
+    expect(
+      collect(items)
+        .where("name", "like", "a.b")
+        .all(),
+    ).toEqual([{ name: "a.b" }]);
+  });
+
+  it("'like' does not hang on a catastrophic-backtracking pattern (ReDoS)", () => {
+    const evilPattern = "(a+)+$";
+    const evilInput = "a".repeat(28) + "!";
+
+    const start = Date.now();
+    const result = collect([{ name: evilInput }])
+      .where("name", "like", evilPattern)
+      .all();
+    expect(Date.now() - start).toBeLessThan(1000);
+    expect(result).toEqual([]);
+  });
+
   it("'regex' tests a RegExp against the stringified value", () => {
     expect(
       collect(users)

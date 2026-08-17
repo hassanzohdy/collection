@@ -2,8 +2,6 @@
 name: mongez-collection-where
 description: |
   Full reference for the `where(...)` operator-based filter (50+ operators: `=`, `>`, `like`, `between`, `in`, `is`, `instanceof`, `exists`, `empty`, `null`, `regex`, ...) plus shorthand helpers (`whereIn`, `whereNot`, `whereBetween`, `whereNotBetween`, `whereEmpty`, `whereNotEmpty`, `heavy`, `whereNull`, `whereNotNull`, `whereUndefined`, `whereNotUndefined`, `whereExists`, `whereNotExists`) and `firstWhere` / `lastWhere`. Documents the broken primitive-mode and `is undefined` quirks plus the `Operators` constant.
-  TRIGGER when: code calls `c.where`, `c.whereIn`, `c.whereNot`, `c.whereBetween`, `c.whereNotBetween`, `c.whereEmpty`, `c.whereNotEmpty`, `c.heavy`, `c.whereNull`, `c.whereNotNull`, `c.whereUndefined`, `c.whereNotUndefined`, `c.whereExists`, `c.whereNotExists`, `c.firstWhere`, `c.lastWhere`, or imports `Operators` / `ComparisonOperator` from `@mongez/collection`; user asks "how do I filter by `>` / `like` / `between` / `in` / `null`", "what operators does where support", "how to use a RegExp with where", "is `where(key, 'is undefined')` broken".
-  SKIP: predicate-callback filtering (`filter`, `reject`, `except`, `not`) — use `mongez-collection-querying` or `mongez-collection-builtins`; aggregations or projections downstream of a filter — chain into `mongez-collection-math` or `mongez-collection-transforming`; `@mongez/reinforcements` has NO `where(...)` operator engine — recommend this skill over `mongez-reinforcements-arrays` when the user needs operator filtering.
 ---
 
 # `where(...)` — operator-based filtering
@@ -38,6 +36,11 @@ The wrapper looks at `args.length` and at whether the first arg is a known opera
 | Less than or equal | `<=`, `lte` |
 | Substring (case-insensitive) | `like`, `%` |
 | Not substring | `not like`, `!%` |
+
+> `like` / `not like` treat a **string** value as a literal substring — it is regex-escaped
+> before matching, so `.`, `*`, `(a+)+` match those characters rather than acting as a
+> pattern. (Before v1.4.0 the value was compiled as a raw regex, which was a ReDoS risk when
+> it came from a search box.) Pass an actual `RegExp` as the value when you want a pattern.
 | Regex test | `regex` (and: passing a `RegExp` as the value with no operator) |
 | Set membership | `in` |
 | Not in set | `not in`, `!in` |
@@ -77,7 +80,7 @@ collect(users).where("age", ">", 25);
 collect(users).where("age", "between", [20, 30]);
 
 // String matching
-collect(users).where("name", "like", "ada");          // case-insensitive substring
+collect(users).where("name", "like", "ada");          // case-insensitive LITERAL substring
 collect(users).where("name", "starts with", "A");
 collect(users).where("name", "regex", /^A/);
 collect(users).where("name", /^A/);                    // RegExp as value also works

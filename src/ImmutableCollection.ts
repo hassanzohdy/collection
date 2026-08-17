@@ -5,6 +5,7 @@ import {
   clone,
   count,
   countBy,
+  escapeRegex,
   even,
   evenIndexes,
   get,
@@ -463,16 +464,18 @@ export class ImmutableCollection<ItemType = any> {
    * Find all matched given strings/regular expressions and replace it with the given replacement
    */
   public replaceAllString(string: string, replacement: string, key?: string) {
+    const pattern = new RegExp(escapeRegex(string), "g");
+
     return this.map(item => {
       if (key) {
         return set(
           cloneForSet(item) as any,
           key,
-          getItemValue(item, key).replace(new RegExp(string, "g"), replacement),
+          getItemValue(item, key).replace(pattern, replacement),
         );
       }
 
-      return String(item).replace(new RegExp(string, "g"), replacement);
+      return String(item).replace(pattern, replacement);
     });
   }
 
@@ -497,16 +500,18 @@ export class ImmutableCollection<ItemType = any> {
    * Remove all matched given strings expressions
    */
   public removeAllString(string: string, key?: string) {
+    const pattern = new RegExp(escapeRegex(string), "g");
+
     return this.map(item => {
       if (key) {
         return set(
           cloneForSet(item) as any,
           key,
-          getItemValue(item, key).replace(new RegExp(string, "g"), ""),
+          getItemValue(item, key).replace(pattern, ""),
         );
       }
 
-      return String(item).replace(new RegExp(string, "g"), "");
+      return String(item).replace(pattern, "");
     });
   }
 
@@ -1531,12 +1536,16 @@ export class ImmutableCollection<ItemType = any> {
         case "like":
         case "%":
           return itemValue.match(
-            value instanceof RegExp ? value : new RegExp(value, "i"),
+            value instanceof RegExp
+              ? value
+              : new RegExp(escapeRegex(value), "i"),
           );
         case "not like":
         case "!%":
           return !itemValue.match(
-            value instanceof RegExp ? value : new RegExp(value, "i"),
+            value instanceof RegExp
+              ? value
+              : new RegExp(escapeRegex(value), "i"),
           );
         case "in":
           return value.includes(itemValue);

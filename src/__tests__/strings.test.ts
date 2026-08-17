@@ -52,6 +52,38 @@ describe("string operations on primitive items", () => {
     ]);
   });
 
+  it("replaceAllString treats regex metacharacters in the search string as literal text", () => {
+    expect(
+      collect(["a.b.c", "axbxc"]).replaceAllString(".", "-").all(),
+    ).toEqual(["a-b-c", "axbxc"]);
+  });
+
+  it("removeAllString treats regex metacharacters in the search string as literal text", () => {
+    expect(
+      collect(["a.b.c", "axbxc"]).removeAllString(".").all(),
+    ).toEqual(["abc", "axbxc"]);
+  });
+
+  it("replaceAllString does not hang on a catastrophic-backtracking pattern (ReDoS)", () => {
+    const evilPattern = "(a+)+$";
+    const evilInput = "a".repeat(28) + "!";
+
+    const start = Date.now();
+    const result = collect([evilInput]).replaceAllString(evilPattern, "x").all();
+    expect(Date.now() - start).toBeLessThan(1000);
+    expect(result).toEqual([evilInput]);
+  });
+
+  it("removeAllString does not hang on a catastrophic-backtracking pattern (ReDoS)", () => {
+    const evilPattern = "(a+)+$";
+    const evilInput = "a".repeat(28) + "!";
+
+    const start = Date.now();
+    const result = collect([evilInput]).removeAllString(evilPattern).all();
+    expect(Date.now() - start).toBeLessThan(1000);
+    expect(result).toEqual([evilInput]);
+  });
+
   it("trim() removes whitespace from each string", () => {
     expect(collect(["  hi  ", " x "]).trim().all()).toEqual(["hi", "x"]);
   });

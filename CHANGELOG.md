@@ -1,5 +1,18 @@
 # Changelog — @mongez/collection
 
+## [1.4.0] — 2026-08-17
+
+Security release, with one behaviour change consumers should read (regex metacharacters in string patterns are now matched literally).
+
+### Security
+
+- **ReDoS via user-supplied patterns in `where(key, "like" | "not like", value)`** (`src/ImmutableCollection.ts:1541`, `:1548`). The comparison value was compiled straight into a `RegExp`, so a value coming from a search box — the overwhelmingly common source for a `like` filter — was an attacker-supplied regex. A pattern such as `(a+)+$` against a long non-matching string makes the match time grow exponentially and pins the thread; on a Node consumer that is the whole process. The value is now passed through `escapeRegex()` before compilation, so it can only ever describe a literal substring. Values already given as a `RegExp` are still used as-is — an explicit `RegExp` is a deliberate act by the caller, not untrusted input.
+- **ReDoS in `replaceAllString` / `removeAllString`** (`src/ImmutableCollection.ts:466`, `:503`). Same class of bug: the `string` argument was compiled into a global `RegExp` unescaped. Both now escape it.
+
+### Changed
+
+- **Regex metacharacters in string patterns are matched literally.** Consequence of the fix above, and the only visible behaviour change in this release. `where("name", "like", "a.c")` previously matched `abc` (the `.` acted as "any character") and now matches only the literal `a.c`; `replaceAllString("$1", "x")` previously behaved as a capture-group reference and now replaces the two characters `$1`. If you were relying on pattern syntax, pass a real `RegExp` instead of a string — that path is unchanged.
+
 ## [1.3.5] — 2026-05-27
 
 ### Fixed
