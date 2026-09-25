@@ -1,5 +1,10 @@
 # Changelog — @mongez/collection
 
+## [1.4.1] — 2026-09-25
+
+### Changed
+- Added a grouped Agent Kit skills index for topic-based discovery.
+
 ## [1.4.0] — 2026-08-17
 
 Security release, with one behaviour change consumers should read (regex metacharacters in string patterns are now matched literally).
